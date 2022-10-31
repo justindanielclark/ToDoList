@@ -1,3 +1,5 @@
 import './Styles/index.scss';
 
-console.log('Hello World!');
+(()=>{
+  console.log('App Loaded')
+})()
