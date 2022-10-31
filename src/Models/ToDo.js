@@ -1,3 +1,5 @@
+import { v4 } from "uuid";
+
 const ToDo = (()=>{
   function ToDo(title, description, dueDate, priority, notes){
     this._title = title;
@@ -5,11 +7,16 @@ const ToDo = (()=>{
     this._dueDate = dueDate;
     this._priority = priority;
     this._notes = notes;
+    this._id = v4();
   }
   ToDo.prototype = {
-    getTitle: function(){},
-    setTitle: function(){},
-
+    getTitle: function(){
+      return this._title;
+    },
+    setTitle: function(title){
+      this._title = title;
+      return this;
+    },
     getDescription: function(){
       return this._description;
     },
@@ -17,7 +24,6 @@ const ToDo = (()=>{
       this._description = description;
       return this;
     },
-
     getDueDate: function(){
       return this._dueDate;
     },
@@ -25,7 +31,6 @@ const ToDo = (()=>{
       this._dueDate = dueDate;
       return this;
     },
-
     getPriority: function(){
       return this._priority;
     },
@@ -33,18 +38,17 @@ const ToDo = (()=>{
       this._priority = priorityValue;
       return this;
     },
-
-    getNotes: function(){
-      return this._notes;
-    },
     addNote: function(note){
       this._notes.push(note);
       return this;
     },
+    getNotes: function(){
+      return this._notes;
+    },
     removeNote: function(index){
       this._notes.splice(index, 1);
       return this;
-    }
+    },
   }
   return ToDo;
 })()
