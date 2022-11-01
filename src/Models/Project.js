@@ -1,3 +1,4 @@
+'use strict';
 import ToDo from "./ToDo.js";
 
 const Project = (()=>{

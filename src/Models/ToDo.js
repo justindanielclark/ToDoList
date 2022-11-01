@@ -1,3 +1,4 @@
+'use strict';
 import { v4 } from "uuid";
 
 const ToDo = (()=>{
@@ -8,6 +9,11 @@ const ToDo = (()=>{
     this._priority = priority;
     this._notes = notes;
     this._id = v4();
+    Object.defineProperties(this, {
+      _title: {
+        enumerable: false,
+      }
+    })
   }
   ToDo.prototype = {
     getID: function(){
