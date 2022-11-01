@@ -10,6 +10,9 @@ const ToDo = (()=>{
     this._id = v4();
   }
   ToDo.prototype = {
+    getID: function(){
+      return this._id;
+    },
     getTitle: function(){
       return this._title;
     },
