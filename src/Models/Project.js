@@ -1,25 +1,36 @@
 'use strict';
 import ToDo from "./ToDo.js";
 
-const Project = (()=>{
-  function Project(projectName){
-    this._projectName = projectName;
-    this._toDos = new Map();
+class Project {
+  #projectName;
+  #ToDos;
+  constructor(projectName){
+    this.#projectName = projectName;
+    this.#ToDos = new Map();
   }
-  Project.prototype = {
-    getName: function(){
-      return this._projectName;
-    },
-    addToDo: function(title, description, dueDate, priority, notes = new Array()){
-      const newToDo = new ToDo(title, description, dueDate, priority, notes);
-      this._toDos.set(newToDo.getID(), newToDo);
-      return newToDo;
-    },
-    getToDo: function(id){
-      return this._toDos.get(id);
-    }
+  addToDo(title, description, dueDate, priority, notes=[]){
+    const newToDo = new ToDo(title, description, dueDate, priority, notes);
+    this.#ToDos.set(newToDo.getID(), newToDo);
+    return newToDo;
   }
-  return Project;
-})();
+  deleteToDo(){
+    const toDo = this.#ToDos.get(id);
+    this.#ToDos.delete(id);
+    return toDo;
+  }
+  getAllToDos(){
+    return Array.from(this.#ToDos.values());
+  }
+  getToDo(id){
+    return this.#ToDos.get(id);
+  }
+  getName(){
+    return this.#projectName;
+  }
+  setName(value){
+    this.#projectName = value;
+    return this.#projectName;
+  }
+}
 
 export default Project;

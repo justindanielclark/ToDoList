@@ -27,9 +27,6 @@ const ToDo_View = (()=>{
     li.append(h1, pDesc, pDue, notesDOM || null);
     return li;
   }
-  function handleDeleteClick(){
-
-  }
   return {render}
 })()
 return ToDo_View;

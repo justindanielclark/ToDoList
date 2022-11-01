@@ -1,0 +1,2 @@
+ProjectsCollection.js
+- Adding a Project with the Same Name Currently has no means of protecting it from overwrite
