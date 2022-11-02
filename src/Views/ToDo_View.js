@@ -11,7 +11,9 @@ const ToDo_View = (()=>{
     pDesc.innerText = toDo.getDescription();
     const pDue = document.createElement('p');
     pDue.classList.add('dueDate');
-    pDue.innerText = toDo.getDueDate().toString();
+    pDue.innerText = toDo.getDueDate().toLocaleDateString();
+    li.append(h1, pDesc, pDue);
+
     const notes = toDo.getNotes();
     let notesDOM;
     if(notes.length > 0){
@@ -24,9 +26,13 @@ const ToDo_View = (()=>{
         notesDOM.appendChild(n);
       }
     }
-    li.append(h1, pDesc, pDue, notesDOM || null);
+    if(notesDOM){
+      li.append(notesDOM);
+    }
+
     return li;
   }
   return {render}
 })()
-return ToDo_View;
+
+export default ToDo_View;
