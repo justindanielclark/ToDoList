@@ -3,15 +3,17 @@ const ProjectsCollection = (() => {
   let _Map = new Map();
   function createProject(projectName, iconPath){
     const P = new Project(projectName, iconPath);
-    _Map.set(projectName, P);
+    const id = P.getID();
+    _Map.set(id, P);
+    return id;
   }
-  function deleteProject(projectName){
-    const P = _Map.get(projectName);
-    _Map.delete(projectName);
+  function deleteProject(id){
+    const P = _Map.get(id);
+    _Map.delete(id);
     return P;
   }
-  function getProject(projectName){
-    return _Map.get(projectName);
+  function getProject(id){
+    return _Map.get(id);
   }
   function getProjects(){
     return Array.from(_Map.values());

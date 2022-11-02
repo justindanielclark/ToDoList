@@ -1,14 +1,18 @@
 'use strict';
 import ToDo from "./ToDo.js";
+import { v4 } from "uuid";
 
 class Project {
   #projectName;
   #iconPath;
   #ToDos;
+  #id;
+
   constructor(projectName, iconPath){
     this.#projectName = projectName;
     this.#ToDos = new Map();
     this.#iconPath = iconPath;
+    this.#id = v4();
   }
   addToDo(title, description, dueDate, priority, notes=[]){
     const newToDo = new ToDo(title, description, dueDate, priority, notes);
@@ -25,6 +29,9 @@ class Project {
   }
   getIconPath(){
     return this.#iconPath;
+  }
+  getID(){
+    return this.#id;
   }
   getToDo(id){
     return this.#ToDos.get(id);
