@@ -1,8 +1,8 @@
 'use strict';
-import './Styles/index.scss';
+// import './Styles/index.scss';
 import ProjectsCollection from './Models/ProjectsCollection.js';
 import ToDo_View from './Views/ToDo_View.js';
-import IconMap from './IconMap.js';
+import IconMap from './Assets/SVGs/IconMap.js'
 
 const App = (()=>{
   const Priorities = ['low', 'med', 'high'];
