@@ -3,19 +3,19 @@
 import './Styles/index.css';
 import ProjectsCollection from './Models/ProjectsCollection.js';
 import ToDo_View from './Views/ToDo_View.js';
-import IconMap from './Assets/SVGs/IconMap.js'
+import Aside_View from './Views/Aside_View';
+import IconMap from './Assets/IconMap'
 
 const App = (()=>{
   const Priorities = ['low', 'med', 'high'];
   const State = (() => {
     const Projects = ProjectsCollection;
-    let currentProjectView;
 
     function changeProjectName(oldProjectName, newProjectName){
       //TODO
     }
-    function createToDo(projectName, title, description, dueDate, priority, notes = []){
-      const project = Projects.getProject(projectName);
+    function createToDo(projectID, title, description, dueDate, priority, notes = []){
+      const project = Projects.getProject(projectID);
       const toDo = project.addToDo(title, description, dueDate, priority, notes = []);
       return toDo;
     }
@@ -56,64 +56,88 @@ const App = (()=>{
       
     }
   })()
-
-  State.createProject('Work', IconMap.bag);
-    State.createToDo('Work', 'Prepare Fiscal Report', 'Q1 Earnings', new Date(), Priorities[2])
-    State.createToDo('Work', 'Repair Fax Machine', 'Janice\'s Office', new Date(), Priorities[0])
-    State.createToDo('Work', 'Study Competitor', 'Cheveron', new Date(), Priorities[2])
-    State.createToDo('Work', 'Study Competitor', 'Exxon Mobil', new Date(), Priorities[1])
-  State.createProject('Home', IconMap.beachSign);
-    State.createToDo('Home', 'Vacuum', 'Office', new Date(), Priorities[1], ['This room is filthy']);
-    State.createToDo('Home', 'Vacuum', 'Bedroom', new Date(), Priorities[0], ['This room is less filthy']);
-    State.createToDo('Home', 'Take Out the Trash', 'Kitchen', new Date(), Priorities[0]);
-    State.createToDo('Home', 'Take Out the Trash', 'Bathroom', new Date(), Priorities[0]);
-    State.createToDo('Home', 'Pay Bills', 'Rent', new Date(), Priorities[2]);
-    State.createToDo('Home', 'Pay Bills', 'Electricity', new Date(), Priorities[2]);
-    State.createToDo('Home', 'Pay Bills', 'Internet', new Date(), Priorities[2]);
-  State.createProject('School', IconMap.camera);
-    State.createToDo('School', 'Finish ToDo App', 'This thing really needs to get done', new Date(), Priorities[1], ['Fix Bugs', 'Add UI']);
-
+  
+  const WorkID = State.createProject('Work', IconMap.bag);
+    State.createToDo(WorkID, 'Prepare Fiscal Report', 'Q1 Earnings', new Date(), Priorities[2])
+    State.createToDo(WorkID, 'Repair Fax Machine', 'Janice\'s Office', new Date(), Priorities[0])
+    State.createToDo(WorkID, 'Study Competitor', 'Cheveron', new Date(), Priorities[2])
+    State.createToDo(WorkID, 'Study Competitor', 'Exxon Mobil', new Date(), Priorities[1])
+  const HomeID = State.createProject('Home', IconMap.beachSign);
+    State.createToDo(HomeID, 'Vacuum', 'Office', new Date(), Priorities[1], ['This room is filthy']);
+    State.createToDo(HomeID, 'Vacuum', 'Bedroom', new Date(), Priorities[0], ['This room is less filthy']);
+    State.createToDo(HomeID, 'Take Out the Trash', 'Kitchen', new Date(), Priorities[0]);
+    State.createToDo(HomeID, 'Take Out the Trash', 'Bathroom', new Date(), Priorities[0]);
+    State.createToDo(HomeID, 'Pay Bills', 'Rent', new Date(), Priorities[2]);
+    State.createToDo(HomeID, 'Pay Bills', 'Electricity', new Date(), Priorities[2]);
+    State.createToDo(HomeID, 'Pay Bills', 'Internet', new Date(), Priorities[2]);
+  const SchoolID = State.createProject('School', IconMap.camera);
+    State.createToDo(SchoolID, 'Finish ToDo App', 'This thing really needs to get done', new Date(), Priorities[1], ['Fix Bugs', 'Add UI']);
+    State.createToDo(SchoolID, 'Finish ToDo App', 'This thing really needs to get done', new Date(), Priorities[1], ['Fix Bugs', 'Add UI']);
+    State.createToDo(SchoolID, 'Finish ToDo App', 'This thing really needs to get done', new Date(), Priorities[1], ['Fix Bugs', 'Add UI']);
+    State.createToDo(SchoolID, 'Finish ToDo App', 'This thing really needs to get done', new Date(), Priorities[1], ['Fix Bugs', 'Add UI']);
+    State.createToDo(SchoolID, 'Finish ToDo App', 'This thing really needs to get done', new Date(), Priorities[1], ['Fix Bugs', 'Add UI']);
+    State.createToDo(SchoolID, 'Finish ToDo App', 'This thing really needs to get done', new Date(), Priorities[1], ['Fix Bugs', 'Add UI']);
+  const GamingID = State.createProject('Gaming', IconMap.beer);
+    State.createToDo(GamingID, 'Beat Crypt of The NecroDancer', 'Low Percent Aria Run', new Date(), Priorities[2]);
+    State.createToDo(GamingID, 'Beat Witcher 3', 'PC', new Date(), Priorities[0]);
 
   const View = (()=>{
-    const section = document.querySelector('section');
+    const viewedProjects = new Map();
+    //HEADER
+    const newProjectButton = document.querySelector('#newProjectButton');
+      newProjectButton.addEventListener('click', handleClick_NewProject);
+    const newToDoButton = document.querySelector('#newToDoButton');
+      newToDoButton.addEventListener('click', handleClick_NewToDo)
+    //MAIN
     const aside = document.querySelector('aside');
+      aside.classList.add('flex', 'flex-col')
+    const section = document.querySelector('section');
+    
+    function init(){}
+    function update(){}
 
-    //Write Out Each Project in Aside
-    const asideH1 = document.createElement('h1');
-      asideH1.classList.add('text-3xl', 'text-white', 'p-4');
-      asideH1.innerText = 'Projects';
-    const asideUL = document.createElement('ul');
-    State.getProjects().forEach(project=>{
-      const projectLI = document.createElement('li');
-        projectLI.classList.add('flex', 'flex-row', 'items-center', 'px-2')
-      const projectTitle = document.createElement('p');
-      projectTitle.innerText = project.getName();
-      const projectSVG = document.createElement('img');
-      projectSVG.classList.add('w-10', 'h-10', 'mx-2')
-      projectSVG.src = project.getIconPath();
-      projectLI.append(projectSVG, projectTitle)
-      asideUL.append(projectLI);
-    })
-    aside.append(asideH1, asideUL);
+    aside.append(...Aside_View(State.getProjects(), {viewProject: handleClick_ViewProject}).render())
 
     //Write Out Each Project In Section
     State.getProjects().forEach(project=>{
-      const projectContainer = document.createElement('article')
-      const h1 = document.createElement('h1');
-      h1.classList.add('bg-red-700', 'text-white', 'text-2xl', 'font-bold')
-      h1.innerText = project.getName();
-      const ul = document.createElement('ul');
-      // ul.classList.add('');
-      project.getAllToDos().forEach(toDo=>{
-        ul.append(ToDo_View.render(toDo))
-      })
-      projectContainer.append(h1, ul);
-      section.append(projectContainer);
+      const ToDos = project.getAllToDos();
+      if(ToDos.length > 0){
+        const projectContainer = document.createElement('article')
+        const h1 = document.createElement('h1');
+          h1.classList.add('bg-red-700', 'text-white', 'text-2xl', 'font-bold')
+          h1.innerText = project.getName();
+        const ul = document.createElement('ul');
+        ul.classList.add('flex', 'flex-col', 'space-y-2');
+        project.getAllToDos().forEach(toDo=>{
+          ul.append(ToDo_View.render(toDo, {delete: handleClick_DeleteToDo, favorite: handleClick_FavoriteToDo}))
+        })
+        projectContainer.append(h1, ul);
+        section.append(projectContainer);
+      }
     })
   })()
 
-  window.State = State;
-  return {
-    State,
+  function handleClick_DeleteToDo(event, id){
+    console.log('Handle Delete ToDo')
+    console.log(event);
+    console.log(id);
+  }
+  function handleClick_FavoriteToDo(event, id){
+    console.log('Handle Favorite ToDo')
+    console.log(event);
+    console.log(id);
+  }
+  function handleClick_NewProject(event){
+    console.log('handleClick_NewProject')
+    console.log(event);
+  }
+  function handleClick_NewToDo(event){
+    console.log('handleClick_NewToDo')
+    console.log(event);
+  }
+  function handleClick_ViewProject(event, id){
+    console.log('handleClick_ViewProject')
+    console.log(event);
+    console.log(id);
   }
 })()
