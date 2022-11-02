@@ -1,5 +1,6 @@
 'use strict';
 // import './Styles/index.scss';
+// import './style.css';
 import ProjectsCollection from './Models/ProjectsCollection.js';
 import ToDo_View from './Views/ToDo_View.js';
 import IconMap from './Assets/SVGs/IconMap.js'
