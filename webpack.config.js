@@ -12,12 +12,10 @@ const config = {
     devServer: {
         open: true,
         host: 'localhost',
+        hot: true,
+        static: './dist',
     },
     devtool: 'inline-source-map',
-    devServer: {
-        static: './dist',
-        hot: true,
-    },
     module: {
         rules: [
             {
@@ -26,11 +24,11 @@ const config = {
             },
             {
                 test: /\.css$/i,
-                use: [stylesHandler,'css-loader'],
+                use: [stylesHandler,'css-loader', 'postcss-loader'],
             },
             {
                 test: /\.s[ac]ss$/i,
-                use: [stylesHandler, 'css-loader', 'sass-loader'],
+                use: [stylesHandler, 'css-loader', 'postcss-loader', 'sass-loader'],
             },
             {
                 test: /\.(eot|svg|ttf|woff|woff2|png|jpg|gif)$/i,

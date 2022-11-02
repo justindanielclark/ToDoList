@@ -1,6 +1,6 @@
 'use strict';
 // import './Styles/index.scss';
-// import './style.css';
+import './Styles/index.css';
 import ProjectsCollection from './Models/ProjectsCollection.js';
 import ToDo_View from './Views/ToDo_View.js';
 import IconMap from './Assets/SVGs/IconMap.js'
@@ -92,7 +92,7 @@ const App = (()=>{
     //Write Out Each Project In Main
     State.getProjects().forEach(project=>{
       const h1 = document.createElement('h1');
-      h1.classList.add('projectTitle')
+      h1.classList.add('bg-red-700')
       h1.innerText = project.getName();
       const ul = document.createElement('ul');
       ul.classList.add('projectList');
