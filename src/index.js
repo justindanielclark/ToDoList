@@ -75,31 +75,40 @@ const App = (()=>{
 
 
   const View = (()=>{
-    const main = document.querySelector('main');
+    const section = document.querySelector('section');
     const aside = document.querySelector('aside');
+
     //Write Out Each Project in Aside
+    const asideH1 = document.createElement('h1');
+      asideH1.classList.add('text-3xl', 'text-white', 'p-4');
+      asideH1.innerText = 'Projects';
     const asideUL = document.createElement('ul');
     State.getProjects().forEach(project=>{
       const projectLI = document.createElement('li');
+        projectLI.classList.add('flex', 'flex-row', 'items-center', 'px-2')
       const projectTitle = document.createElement('p');
       projectTitle.innerText = project.getName();
       const projectSVG = document.createElement('img');
+      projectSVG.classList.add('w-10', 'h-10', 'mx-2')
       projectSVG.src = project.getIconPath();
       projectLI.append(projectSVG, projectTitle)
       asideUL.append(projectLI);
     })
-    aside.append(asideUL);
-    //Write Out Each Project In Main
+    aside.append(asideH1, asideUL);
+
+    //Write Out Each Project In Section
     State.getProjects().forEach(project=>{
+      const projectContainer = document.createElement('article')
       const h1 = document.createElement('h1');
-      h1.classList.add('bg-red-700')
+      h1.classList.add('bg-red-700', 'text-white', 'text-2xl', 'font-bold')
       h1.innerText = project.getName();
       const ul = document.createElement('ul');
-      ul.classList.add('projectList');
+      // ul.classList.add('');
       project.getAllToDos().forEach(toDo=>{
         ul.append(ToDo_View.render(toDo))
       })
-      main.append(h1, ul);
+      projectContainer.append(h1, ul);
+      section.append(projectContainer);
     })
   })()
 

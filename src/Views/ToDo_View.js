@@ -1,17 +1,31 @@
 const ToDo_View = (()=>{
   function render(toDo){
     const li = document.createElement('li');
-    li.classList.add('toDo', toDo.getPriority());
-    li.dataset.id = toDo.getID();
+      li.classList.add('odd:bg-yellow-50', 'even:bg-purple-50', 'border-l-4', 'rounded-lg');
+      li.dataset.id = toDo.getID();
+      switch(toDo.getPriority()){
+        case 'high': {
+          li.classList.add('border-red-500');
+          break;
+        }
+        case 'med': {
+          li.classList.add('border-yellow-500');
+          break;
+        }
+        case 'low': {
+          li.classList.add('border-green-500');
+          break;
+        }
+      }
     const h1 = document.createElement('h1');
-    h1.classList.add('title');
-    h1.innerText = toDo.getTitle();
+      h1.classList.add('text-xl', 'font-bold');
+      h1.innerText = toDo.getTitle();
     const pDesc = document.createElement('p');
-    pDesc.classList.add('description');
-    pDesc.innerText = toDo.getDescription();
+      pDesc.classList.add('text-base');
+      pDesc.innerText = toDo.getDescription();
     const pDue = document.createElement('p');
-    pDue.classList.add('dueDate');
-    pDue.innerText = toDo.getDueDate().toLocaleDateString();
+      pDue.classList.add('text-sm');
+      pDue.innerText = toDo.getDueDate().toLocaleDateString();
     li.append(h1, pDesc, pDue);
 
     const notes = toDo.getNotes();
