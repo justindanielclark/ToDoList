@@ -4,7 +4,8 @@ import './Styles/index.css';
 import ProjectsCollection from './Models/ProjectsCollection.js';
 import ToDo_View from './Views/ToDo_View.js';
 import Aside_View from './Views/Aside_View';
-import IconMap from './Assets/IconMap'
+import IconMap from './Assets/IconMap';
+import AddNewToDo_View from './Views/AddNewToDo_View';
 
 const App = (()=>{
   const Priorities = ['low', 'med', 'high'];
@@ -83,6 +84,7 @@ const App = (()=>{
 
   const View = (()=>{
     const viewedProjects = new Map();
+    const body = document.body;
     //HEADER
     const newProjectButton = document.querySelector('#newProjectButton');
       newProjectButton.addEventListener('click', handleClick_NewProject);
@@ -95,6 +97,10 @@ const App = (()=>{
     
     function init(){}
     function update(){}
+    function handleClick_NewToDo(event){
+      const modal = AddNewToDo_View(State.getProjects());
+      body.prepend(modal);
+    }
 
     aside.append(...Aside_View(State.getProjects(), {viewProject: handleClick_ViewProject}).render())
 
@@ -129,10 +135,6 @@ const App = (()=>{
   }
   function handleClick_NewProject(event){
     console.log('handleClick_NewProject')
-    console.log(event);
-  }
-  function handleClick_NewToDo(event){
-    console.log('handleClick_NewToDo')
     console.log(event);
   }
   function handleClick_ViewProject(event, id){
