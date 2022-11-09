@@ -1,16 +1,12 @@
 'use strict';
 import './Styles/index.css';
 import ProjectsCollection from './Models/ProjectsCollection.js';
-import ToDo_View from './Views/ToDo_View.js';
-import Aside_View from './Views/Aside_View';
-import IconMap from './Assets/IconMap';
-import AddNewToDo_View from './Views/AddNewToDo_View';
+import newProjectModal from './Views/NewProjectModal.js';
 
 const App = (()=>{
   const Priorities = ['low', 'med', 'high'];
   const State = (() => {
     const Projects = ProjectsCollection;
-
     function changeProjectName(oldProjectName, newProjectName){
       //TODO
     }
@@ -57,88 +53,115 @@ const App = (()=>{
     }
   })()
   
-  const WorkID = State.createProject('Work', IconMap.bag);
-    State.createToDo(WorkID, 'Prepare Fiscal Report', 'Q1 Earnings', new Date(), Priorities[2])
-    State.createToDo(WorkID, 'Repair Fax Machine', 'Janice\'s Office', new Date(), Priorities[0])
-    State.createToDo(WorkID, 'Study Competitor', 'Cheveron', new Date(), Priorities[2])
-    State.createToDo(WorkID, 'Study Competitor', 'Exxon Mobil', new Date(), Priorities[1])
-  const HomeID = State.createProject('Home', IconMap.beachSign);
-    State.createToDo(HomeID, 'Vacuum', 'Office', new Date(), Priorities[1], ['This room is filthy']);
-    State.createToDo(HomeID, 'Vacuum', 'Bedroom', new Date(), Priorities[0], ['This room is less filthy']);
-    State.createToDo(HomeID, 'Take Out the Trash', 'Kitchen', new Date(), Priorities[0]);
-    State.createToDo(HomeID, 'Take Out the Trash', 'Bathroom', new Date(), Priorities[0]);
-    State.createToDo(HomeID, 'Pay Bills', 'Rent', new Date(), Priorities[2]);
-    State.createToDo(HomeID, 'Pay Bills', 'Electricity', new Date(), Priorities[2]);
-    State.createToDo(HomeID, 'Pay Bills', 'Internet', new Date(), Priorities[2]);
-  const SchoolID = State.createProject('School', IconMap.camera);
-    State.createToDo(SchoolID, 'Finish ToDo App', 'This thing really needs to get done', new Date(), Priorities[1], ['Fix Bugs', 'Add UI']);
-    State.createToDo(SchoolID, 'Finish ToDo App', 'This thing really needs to get done', new Date(), Priorities[1], ['Fix Bugs', 'Add UI']);
-    State.createToDo(SchoolID, 'Finish ToDo App', 'This thing really needs to get done', new Date(), Priorities[1], ['Fix Bugs', 'Add UI']);
-    State.createToDo(SchoolID, 'Finish ToDo App', 'This thing really needs to get done', new Date(), Priorities[1], ['Fix Bugs', 'Add UI']);
-    State.createToDo(SchoolID, 'Finish ToDo App', 'This thing really needs to get done', new Date(), Priorities[1], ['Fix Bugs', 'Add UI']);
-    State.createToDo(SchoolID, 'Finish ToDo App', 'This thing really needs to get done', new Date(), Priorities[1], ['Fix Bugs', 'Add UI']);
-  const GamingID = State.createProject('Gaming', IconMap.beer);
-    State.createToDo(GamingID, 'Beat Crypt of The NecroDancer', 'Low Percent Aria Run', new Date(), Priorities[2]);
-    State.createToDo(GamingID, 'Beat Witcher 3', 'PC', new Date(), Priorities[0]);
+  // const WorkID = State.createProject('Work', IconMap.bag);
+  // State.createToDo(WorkID, 'Prepare Fiscal Report', 'Q1 Earnings', new Date(), Priorities[2])
+
+  // const GamingID = State.createProject('Gaming', IconMap.beer);
+  // State.createToDo(GamingID, 'Beat Crypt of the NecroDancer', 'Q1 Earnings', new Date(), Priorities[2])
 
   const View = (()=>{
-    const viewedProjects = new Map();
     const body = document.body;
-    //HEADER
-    const newProjectButton = document.querySelector('#newProjectButton');
-      newProjectButton.addEventListener('click', handleClick_NewProject);
-    const newToDoButton = document.querySelector('#newToDoButton');
-      newToDoButton.addEventListener('click', handleClick_NewToDo)
-    //MAIN
+    const header = document.querySelector('header');
+    const main = document.querySelector('main');
     const aside = document.querySelector('aside');
-      aside.classList.add('flex', 'flex-col')
     const section = document.querySelector('section');
-    
-    function init(){}
-    function update(){}
-    function handleClick_NewToDo(event){
-      const modal = AddNewToDo_View(State.getProjects());
-      body.prepend(modal);
-    }
 
-    aside.append(...Aside_View(State.getProjects(), {viewProject: handleClick_ViewProject}).render())
+    updateAside();
+    updateHeader();
+    updateSection();
 
-    //Write Out Each Project In Section
-    State.getProjects().forEach(project=>{
-      const ToDos = project.getAllToDos();
-      if(ToDos.length > 0){
-        const projectContainer = document.createElement('article')
-        const h1 = document.createElement('h1');
-          h1.classList.add('bg-red-700', 'text-white', 'text-2xl', 'font-bold')
-          h1.innerText = project.getName();
-        const ul = document.createElement('ul');
-        ul.classList.add('flex', 'flex-col', 'space-y-2');
-        project.getAllToDos().forEach(toDo=>{
-          ul.append(ToDo_View.render(toDo, {delete: handleClick_DeleteToDo, favorite: handleClick_FavoriteToDo}))
-        })
-        projectContainer.append(h1, ul);
-        section.append(projectContainer);
+    function updateAside(){
+      let asideH1 = aside.querySelector('#asideTitle');
+      let asideUL = aside.querySelector('#asideProjectList');
+      let notice = aside.querySelector('#AsideNoProjectsNotice');
+      const projects = State.getProjects();
+      //If Never Initialized, Ensure Aside Has Its Header and Project List
+      if(!asideH1){
+        asideH1 = document.createElement('h1');
+          asideH1.className = 'text-3xl p-4 text-neutral-100';
+          asideH1.id = 'asideTitle';
+          asideH1.innerText = 'Projects:';
+        aside.append(asideH1);
       }
-    })
-  })()
+      if(!asideUL){
+        asideUL = document.createElement('ul');
+          asideUL.id = 'asideProjectListing';
+        aside.append(asideUL);
+      }
+      //No Active Projects
+      if(projects.length === 0){
+        const notice = document.createElement('li');
+          notice.innerText = '< No Existing Projects >'
+          notice.id = '#AsideNoProjectsNotice'
+          asideUL.append(notice);
+      }
+      //Active Projects 
+      else {
+        if(notice){
+          aside.removeChild(notice);
+        }
+        projects.forEach(project=>{
+          const LI = document.createElement('li');
+          const button = document.createElement('button');
+            button.className= 'flex flex-row items-center px-6 py-2';
+          const buttonTitle = document.createElement('p');
+            buttonTitle.innerText = project.getName();
+          const buttonIMG = document.createElement('img');
+            buttonIMG.className = 'w-10 h-10 mx-2 p-1 rounded-full bg-slate-300'
+            buttonIMG.src = project.getIconPath();
+          button.append(buttonIMG, buttonTitle);
+          LI.append(button)
+          asideUL.append(LI);
+        })
+      }
+    }
+    function updateHeader(){
+      const isProjects = State.getProjects().length > 0;
+      const projectButton = header.querySelector('#newProjectButton');
+      const toDoButton = header.querySelector('#newToDoButton');
 
-  function handleClick_DeleteToDo(event, id){
-    console.log('Handle Delete ToDo')
-    console.log(event);
-    console.log(id);
-  }
-  function handleClick_FavoriteToDo(event, id){
-    console.log('Handle Favorite ToDo')
-    console.log(event);
-    console.log(id);
-  }
+      //If Never Initialized, Ensure Header has the Add New Project Button
+      if(!projectButton){
+        const newProjectButton = document.createElement('button');
+          newProjectButton.className = 'bg-emerald-600 hover:bg-emerald-800 transition-colors text-neutral-100 text-lg px-2 py-1 ml-1 mr-5 rounded-lg shadow-md shadow-emerald-900';
+          newProjectButton.id = 'newProjectButton';
+          newProjectButton.innerText = 'New Project';
+          newProjectButton.addEventListener('click', handleClick_NewProject);
+        header.append(newProjectButton);
+      }
+      //If Header Has NewToDoButton, But No Active Projects, Remove Button
+      if(toDoButton && !isProjects){
+        header.removeChild(toDoButton);
+      } //If Header Has No NewToDoButton, And Active Projects, Add Button
+      else if (isProjects){ 
+        const newToDoButton = document.createElement('button');
+          newToDoButton.className = 'bg-emerald-600 hover:bg-emerald-800 transition-colors text-neutral-100 text-lg px-2 py-1 mx-1 rounded-lg shadow-md shadow-emerald-900';
+          newToDoButton.id = 'newToDoButton';
+          newToDoButton.innerText = 'New To Do';
+        header.append(newToDoButton);
+      }
+    }
+    function updateSection(){
+      State.getProjects().forEach(project=>{
+        const ToDos = project.getAllToDos();
+        if(ToDos.length > 0){
+          const projectContainer = document.createElement('article')
+          const h1 = document.createElement('h1');
+            h1.classList.add('bg-red-700', 'text-white', 'text-2xl', 'font-bold')
+            h1.innerText = project.getName();
+          const ul = document.createElement('ul');
+          ul.classList.add('flex', 'flex-col', 'space-y-2');
+          // project.getAllToDos().forEach(toDo=>{
+          //   ul.append(ToDo_View.render(toDo, {delete: handleClick_DeleteToDo, favorite: handleClick_FavoriteToDo}))
+          // })
+          projectContainer.append(h1, ul);
+          section.append(projectContainer);
+        }
+      })
+    }
+  })()
+  
   function handleClick_NewProject(event){
-    console.log('handleClick_NewProject')
-    console.log(event);
-  }
-  function handleClick_ViewProject(event, id){
-    console.log('handleClick_ViewProject')
-    console.log(event);
-    console.log(id);
+    document.body.prepend(newProjectModal.create());
   }
 })()

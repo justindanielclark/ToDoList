@@ -8,12 +8,14 @@ class ToDo {
   #priority;
   #notes;
   #id;
-  constructor(title, description, dueDate, priority, notes = []){
+  #projectID;
+  constructor(title, description, dueDate, priority, projectID, notes = []){
     this.#title = title;
     this.#description = description;
     this.#dueDate = dueDate;
     this.#priority = priority;
     this.#notes = notes;
+    this.#projectID = this.#projectID;
     this.#id = v4();
   }
   addNote(note){
@@ -34,6 +36,9 @@ class ToDo {
   }
   getPriority(){
     return this.#priority;
+  }
+  getProjectID(){
+    return this.#projectID;
   }
   getTitle(){
     return this.#title;

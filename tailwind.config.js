@@ -8,7 +8,7 @@ module.exports = {
   darkMode: false, // or 'media' or 'class'
   safelist: [
     {
-      pattern: /rounded-(md|sm|lg|full)/
+      pattern: /rounded-(sm|md|lg|full)/
     },
     {
       pattern: /(top|right|bottom|left)-0/
@@ -18,7 +18,7 @@ module.exports = {
       variants: ['hover']
     },
     {
-      pattern: /border-(red|yellow|green)-(200|300|400|700|800|900)/,
+      pattern: /border-(stone|red|orange|amber|yellow|lime|green|emerald|teal|rose|pink|fuchsia|purple|violet|indigo|blue|sky|cyan)-700/,
       variants: ['hover']
     },
     {
@@ -32,11 +32,19 @@ module.exports = {
       variants: ['peer-checked']
     },
     'absolute',
+    'animate-fadeIn',
+    'animate-slideInTop',
+    'animate-slideInRight',
+    'animate-slideInBottom',
+    'animate-slideInLeft',
     'basis-4',
     'basis-8',
     'basis-32',
     'border',
     'border-2',
+    'border-b-2',
+    'border-r-2',
+    'border-b-stone-100',
     'duration-300',
     'flex',
     'flex-1',
@@ -48,6 +56,7 @@ module.exports = {
     'grow',
     'grow-0',
     'h-0',
+    'h-4',
     'h-8',
     'h-48',
     'h-full',
@@ -66,6 +75,7 @@ module.exports = {
     'shrink-0',
     'sr-only',
     'text-center',
+    'text-3xl',
     'transition-colors',
     'w-0',
     'w-8',

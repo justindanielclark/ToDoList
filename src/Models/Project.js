@@ -15,7 +15,7 @@ class Project {
     this.#id = v4();
   }
   addToDo(title, description, dueDate, priority, notes=[]){
-    const newToDo = new ToDo(title, description, dueDate, priority, notes);
+    const newToDo = new ToDo(title, description, dueDate, priority, this.#id, notes);
     this.#ToDos.set(newToDo.getID(), newToDo);
     return newToDo;
   }

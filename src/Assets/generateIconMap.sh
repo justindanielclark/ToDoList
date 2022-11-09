@@ -1,5 +1,5 @@
 #!/bin/bash
-files=`ls ./src/Assets/SVGs/*.svg`
+files=`ls ./src/Assets/SVGs/Icons/*.svg`
 for eachfile in $files
 do
   file=${eachfile:18}
