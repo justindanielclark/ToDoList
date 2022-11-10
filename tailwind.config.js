@@ -1,9 +1,8 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    './src/*.html',
-    './src/*.js',
-    './src/index.js'
+    './src/**/*.html',
+    './src/**/*.js',
   ],
   darkMode: false, // or 'media' or 'class'
   safelist: [
@@ -14,7 +13,7 @@ module.exports = {
       pattern: /(top|right|bottom|left)-0/
     },
     {
-      pattern: /bg-(stone|red|orange|amber|yellow|lime|green|emerald|teal|rose|pink|fuchsia|purple|violet|indigo|blue|sky|cyan)-(50|100|400|700|800|900)/,
+      pattern: /bg-(stone|red|orange|amber|yellow|lime|green|emerald|teal|rose|pink|fuchsia|purple|violet|indigo|blue|sky|cyan)-(50|100|300|400|700|800|900)/,
       variants: ['hover']
     },
     {
@@ -32,11 +31,6 @@ module.exports = {
       variants: ['peer-checked']
     },
     'absolute',
-    'animate-fadeIn',
-    'animate-slideInTop',
-    'animate-slideInRight',
-    'animate-slideInBottom',
-    'animate-slideInLeft',
     'basis-4',
     'basis-8',
     'basis-32',
@@ -66,8 +60,6 @@ module.exports = {
     'justify-center',
     'list-disc',
     'list-inside',
-    'opacity-90',
-    'opacity-100',
     'overflow-y-scroll',
     'relative',
     'resize-none',
@@ -88,18 +80,26 @@ module.exports = {
   ],
   theme: {
     extend: {
-      //TO SETUP, Unable to Link to Index.js
       animation: {
-        fadeIn: 'fadeIn .75s linear',
-        slideInTop: 'slideInTop 1s ease-in-out',
-        slideInRight: 'slideInRight 1s ease-in-out',
-        slideInBottom: 'slideInBottom 1s ease-in-out',
-        slideInLeft: 'slideInLeft 1s ease-in-out'
+        fadeIn: 'fadeIn .5s linear',
+        fadeOut: 'fadeOut .5s linear',
+        slideInTop: 'slideInTop .5s ease-in-out',
+        slideInRight: 'slideInRight .5s ease-in-out',
+        slideInBottom: 'slideInBottom .5s ease-in-out',
+        slideInLeft: 'slideInLeft .5s ease-in-out',
+        slideOutTop: 'slideOutTop .5s ease-in-out',
+        slideOutRight: 'slideOutRight .5s ease-in-out',
+        slideOutBottom: 'slideOutBottom .5s ease-in-out',
+        slideOutLeft: 'slideOutLeft .5s ease-in-out',
       },
       keyframes: {
         fadeIn: {
           '0%': {opacity: '0'},
           '100%': {opacity: '1'}
+        },
+        fadeOut: {
+          '0%': {opacity: '1'},
+          '100%': {opacity: '0'}
         },
         slideInLeft: {
           '0%': {transform: 'translateX(400%)', opacity: '0'},
@@ -111,12 +111,28 @@ module.exports = {
         },
         slideInTop: {
           '0%': {transform: 'translateY(-400%)', opacity: '0'},
-          '100%': {transform: 'translateX(0%)', opacity: '1'}
+          '100%': {transform: 'translateY(0%)', opacity: '1'}
         },
         slideInBottom: {
           '0%': {transform: 'translateY(400%)', opacity: '0'},
-          '100%': {transform: 'translateX(0%)', opacity: '1'}
-        }
+          '100%': {transform: 'translateY(0%)', opacity: '1'}
+        },
+        slideOutLeft: {
+          '0%': {transform: 'translateX(0%)', opacity: '1'},
+          '100%': {transform: 'translateX(400%)', opacity: '0'}
+        },
+        slideOutRight: {
+          '0%': {transform: 'translateX(0%)', opacity: '1'},
+          '100%': {transform: 'translateX(-400%)', opacity: '0'}
+        },
+        slideOutTop: {
+          '0%': {transform: 'translateY(0%)', opacity: '1'},
+          '100%': {transform: 'translateY(-400%)', opacity: '0'}
+        },
+        slideOutBottom: {
+          '0%': {transform: 'translateY(0%)', opacity: '1'},
+          '100%': {transform: 'translateY(400%)', opacity: '0'}
+        },
       }
     },
   },

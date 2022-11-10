@@ -7,12 +7,13 @@ class Project {
   #iconPath;
   #ToDos;
   #id;
-
-  constructor(projectName, iconPath){
+  #color;
+  constructor(projectName, iconPath, color){
     this.#projectName = projectName;
     this.#ToDos = new Map();
     this.#iconPath = iconPath;
     this.#id = v4();
+    this.#color = color;
   }
   addToDo(title, description, dueDate, priority, notes=[]){
     const newToDo = new ToDo(title, description, dueDate, priority, this.#id, notes);
@@ -26,6 +27,9 @@ class Project {
   }
   getAllToDos(){
     return Array.from(this.#ToDos.values());
+  }
+  getColor(){
+    return this.#color;
   }
   getIconPath(){
     return this.#iconPath;
@@ -42,6 +46,15 @@ class Project {
   setName(value){
     this.#projectName = value;
     return this.#projectName;
+  }
+  toString(){
+    return {
+      projectName: `${this.#projectName}`,
+      iconPath: `${this.#iconPath}`,
+      ToDos: `${this.#ToDos}`,
+      id: `${this.#id}`,
+      color: `${this.#color}`
+    }
   }
 }
 

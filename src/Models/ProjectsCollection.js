@@ -1,8 +1,8 @@
 import Project from "./Project.js";
 const ProjectsCollection = (() => {
   let _Map = new Map();
-  function createProject(projectName, iconPath){
-    const P = new Project(projectName, iconPath);
+  function createProject(projectName, iconPath, color){
+    const P = new Project(projectName, iconPath, color);
     const id = P.getID();
     _Map.set(id, P);
     return id;
