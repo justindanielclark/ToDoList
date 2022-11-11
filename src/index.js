@@ -4,6 +4,7 @@ import tailwindColors from 'tailwindcss/colors';
 import ProjectsCollection from './Models/ProjectsCollection.js';
 import newProjectModal from './Views/NewProjectModal.js';
 import newToDoModal from './Views/NewToDoModal.js';
+import editProjectModal from './Views/EditProjectModal';
 import IconMap from './Assets/IconMap.js';
 
 import edit from './Assets/SVGs/UI/edit.svg';
@@ -56,9 +57,9 @@ const App = (()=>{
       
     }
   })()
-  // State.createProject('Backpacking', IconMap.backpack, 'green');
-  // State.createProject('Business Trip', IconMap.bag, 'amber');
-  // State.createProject('Sunday Party', IconMap.beer, 'rose');
+  State.createProject('Backpacking', IconMap.backpack, 'green');
+  State.createProject('Business Trip', IconMap.bag, 'amber');
+  State.createProject('Sunday Party', IconMap.beer, 'rose');
 
   const View = (()=>{
     const header = document.querySelector('header');
@@ -137,6 +138,7 @@ const App = (()=>{
             const optionsGroup = document.createElement('div');
             optionsGroup.className = 'flex flex-col w-full justify-start items-start max-h-0 mt-2 overflow-hidden gap-2'
             optionsGroup.addEventListener('animationend', handleAnimationEnd_OptionsGroup);
+
             const editOption = document.createElement('button');
             editOption.className = 'flex flex-row items-center justify-start w-full';
             const editImg = document.createElement('img');
@@ -146,7 +148,10 @@ const App = (()=>{
             const editSpan = document.createElement('span');
             editSpan.className = 'px-2';
             editSpan.innerText = 'Edit Project';
+            editOption.addEventListener('click', handleClick_editProjectButton.bind(editOption));
             editOption.append(editImg, editSpan);
+
+
             const deleteOption = document.createElement('button');
             deleteOption.className = 'flex flex-row items-center justify-start w-full';
             const deleteImg = document.createElement('img');
@@ -156,6 +161,7 @@ const App = (()=>{
             const deleteSpan = document.createElement('span');
             deleteSpan.className = 'px-2'
             deleteSpan.innerText = 'Delete Project';
+            deleteOption.addEventListener('click', handleClick_deleteProjectButton.bind(deleteOption));
             deleteOption.append(deleteImg, deleteSpan);
 
             optionsGroup.append(editOption, deleteOption);
@@ -164,6 +170,13 @@ const App = (()=>{
 
             asideUL.append(LI);
             
+            function handleClick_editProjectButton(arg){
+              document.body.prepend(editProjectModal());
+            }
+            function handleClick_deleteProjectButton(event){
+              console.log('delete button clicked');
+              console.log(this);
+            }
             function handleClick_expandButton(event){
               if(optionsGroup.classList.contains('max-h-0')){
                 expandButton.innerText = '-';

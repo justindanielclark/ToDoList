@@ -3,7 +3,7 @@ import IconMap from '../Assets/IconMap.js';
 import exclamation from '../Assets/SVGs/UI/exclamation.svg';
 import PossibleColors from '../Models/PossibleColors';
 
-const newProjectModal = (props) => {
+const editProjectModal = (props) => {
   let chosenColor = PossibleColors[Math.floor(Math.random()*PossibleColors.length)];
   let chosenIcon = undefined;
 
@@ -14,7 +14,7 @@ const newProjectModal = (props) => {
     modalScreen.className = 'w-full h-full opacity-90 bg-stone-800 animate-fadeIn'
 
   const modalForm = document.createElement('div');
-    modalForm.id = 'newProjectModal';
+    modalForm.id = 'editProjectModal';
     modalForm.className = 'flex flex-col rounded-md shadow-md shadow-slate-900 w-80 absolute opacity-100 z-50';
     switch(Math.floor(Math.random()*4)){
       case 0: {
@@ -36,16 +36,16 @@ const newProjectModal = (props) => {
     }
 
   const modalTitle = document.createElement('h1');
-    modalTitle.id = 'newProjectModal_Title';
-    modalTitle.innerText = 'Create New Project';
+    modalTitle.id = 'editProjectModal_Title';
+    modalTitle.innerText = 'Edit Project';
     modalTitle.className = 'text-base font-bold px-1 py-2 bg-stone-700 text-neutral-100 rounded-t-md border-b-2 border-b-stone-100';
 
   const nameInputGroup = document.createElement('div');
-    nameInputGroup.id = 'newProjectModal_Name_InputGroup';
+    nameInputGroup.id = 'editProjectModal_Name_InputGroup';
     nameInputGroup.className = 'flex flex-row items-center border-b-2 border-b-stone-100 transition-colors duration-300';
   const nameInputGroupLabel = document.createElement('label');
     nameInputGroupLabel.innerText = 'Project Name:';
-    nameInputGroupLabel.id = 'newProjectModal_Name_Label';
+    nameInputGroupLabel.id = 'editProjectModal_Name_Label';
     nameInputGroupLabel.htmlFor = 'projectName';
     nameInputGroupLabel.className = 'autofill:text-neutral-100 text-neutral-100 text-base font-bold h-8 pr-2 basis-32 shrink-0 grow-0 text-right flex items-center justify-end transition-colors duration-300';
   const nameInputGroupTextInput = document.createElement('input');
@@ -58,11 +58,11 @@ const newProjectModal = (props) => {
   nameInputGroup.append(nameInputGroupLabel, nameInputGroupTextInput);
 
   const colorInputGroup = document.createElement('div');
-    colorInputGroup.id = 'newProjectModal_Color_InputGroup';
+    colorInputGroup.id = 'editProjectModal_Color_InputGroup';
     colorInputGroup.className = 'flex flex-row border-b-2 border-b-stone-100 items-center transition-colors duration-300';
   const colorInputGroupLabel = document.createElement('label');
     colorInputGroupLabel.innerText = 'Color:';
-    colorInputGroupLabel.id = 'newProjectModal_Color_Label';
+    colorInputGroupLabel.id = 'editProjectModal_Color_Label';
     colorInputGroupLabel.htmlFor = 'projectColor';
     colorInputGroupLabel.className = 'text-neutral-100 text-base font-bold w-32 h-8 pr-2 flex items-center justify-end transition-colors duration-300';
   const colorInputGroupColorContainer = document.createElement('div');
@@ -78,17 +78,17 @@ const newProjectModal = (props) => {
   colorInputGroup.append(colorInputGroupLabel, colorInputGroupColorContainer);
 
   const iconInputGroup = document.createElement('div');
-    iconInputGroup.id = 'newProjectModal_Icon_InputGroup';
+    iconInputGroup.id = 'editProjectModal_Icon_InputGroup';
     iconInputGroup.className = 'flex flex-row border-b-2 border-b-stone-100 items-center transition-colors duration-300';
   const iconInputGroupLabel = document.createElement('label');
     iconInputGroupLabel.innerText = 'Icon:';
-    iconInputGroupLabel.id = 'newProjectModal_Icon_Label';
+    iconInputGroupLabel.id = 'editProjectModal_Icon_Label';
     iconInputGroupLabel.htmlFor = 'projectIcon';
     iconInputGroupLabel.className = 'text-neutral-100 text-base font-bold basis-32 h-8 pr-2 flex items-center justify-end transition-colors duration-300';
   const IconsContainer = document.createElement('div');
     IconsContainer.className = 'grid grid-cols-3 gap-2 p-2 overflow-y-scroll h-48 transition-colors duration-300';
   for(let icon in IconMap){
-    const id = `newProjectModal_Icon_${icon}`;
+    const id = `editProjectModal_Icon_${icon}`;
     const IconLabel = document.createElement('label');
     IconLabel.className ='flex flex-col justify-center items-center p-2 rounded-full transition-colors duration-300';
       IconLabel.htmlFor = id;
@@ -125,16 +125,16 @@ const newProjectModal = (props) => {
   messageGroup.append(messageImg1, messages, messageImg2);
 
   const controlsInputGroup = document.createElement('div');
-    controlsInputGroup.id = 'newProjectModal_ControlsGroup';
+    controlsInputGroup.id = 'editProjectModal_ControlsGroup';
     controlsInputGroup.className = 'px-2 py-2 bg-stone-700 text-indigo-50 flex flex-row justify-end gap-2 rounded-b-md';
   const controlsInputGroupCancelButton = document.createElement('button');
     controlsInputGroupCancelButton.innerText = 'Cancel';
-    controlsInputGroupCancelButton.id = 'newProjectModal_ControlsGroup_CancelButton';
+    controlsInputGroupCancelButton.id = 'editProjectModal_ControlsGroup_CancelButton';
     controlsInputGroupCancelButton.className = 'text-lg rounded-md hover:bg-red-800 bg-red-700 text-red-50 px-2 py-1';
     controlsInputGroupCancelButton.addEventListener('click', handleClick_CancelButton);
   const controlsInputGroupAcceptButton = document.createElement('button');
     controlsInputGroupAcceptButton.innerText = 'Accept';
-    controlsInputGroupAcceptButton.id = 'newProjectModal_ControlsGroup_AcceptButton';
+    controlsInputGroupAcceptButton.id = 'editProjectModal_ControlsGroup_AcceptButton';
     controlsInputGroupAcceptButton.className = 'text-lg rounded-md hover:bg-green-800 bg-green-700 text-green-50 px-2 py-1';
     controlsInputGroupAcceptButton.addEventListener('click', handleClick_AcceptButton);
   controlsInputGroup.append(controlsInputGroupCancelButton, controlsInputGroupAcceptButton);
@@ -255,4 +255,4 @@ const newProjectModal = (props) => {
   return modal;
 }
 
-export default newProjectModal;
+export default editProjectModal;
