@@ -8,20 +8,28 @@ class Project {
   #ToDos;
   #id;
   #color;
+  #numPrios;
   constructor(projectName, iconPath, color){
     this.#projectName = projectName;
     this.#ToDos = new Map();
     this.#iconPath = iconPath;
     this.#id = v4();
     this.#color = color;
+    this.#numPrios = {
+      low: 0,
+      med: 0,
+      high: 0,
+    }
   }
-  addToDo(title, description, dueDate, priority, notes=[]){
-    const newToDo = new ToDo(title, description, dueDate, priority, this.#id, notes);
+  addToDo(title, dueDate, priority, notes=[]){
+    this.#numPrios[priority]++;
+    const newToDo = new ToDo(title, dueDate, priority, this.#id, notes);
     this.#ToDos.set(newToDo.getID(), newToDo);
     return newToDo;
   }
-  deleteToDo(){
+  deleteToDo(id){
     const toDo = this.#ToDos.get(id);
+    this.#numPrios[toDo.getPriority()]--;
     this.#ToDos.delete(id);
     return toDo;
   }
@@ -43,18 +51,20 @@ class Project {
   getName(){
     return this.#projectName;
   }
+  getNumPrios(){
+    return this.#numPrios;
+  }
   setName(value){
     this.#projectName = value;
     return this.#projectName;
   }
   toString(){
-    return {
-      projectName: `${this.#projectName}`,
-      iconPath: `${this.#iconPath}`,
-      ToDos: `${this.#ToDos}`,
-      id: `${this.#id}`,
-      color: `${this.#color}`
-    }
+    const message = `projectName: ${this.#projectName},\n
+    iconPath: ${this.#iconPath},\n
+    ToDos: ${this.#ToDos},\n
+    id: ${this.#id},\n
+    color: ${this.#color},\n`
+    return message;
   }
 }
 

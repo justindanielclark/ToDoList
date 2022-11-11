@@ -3,28 +3,23 @@ import { v4 } from "uuid";
 
 class ToDo {
   #title;
-  #description;
   #dueDate;
   #priority;
   #notes;
   #id;
   #projectID;
-  constructor(title, description, dueDate, priority, projectID, notes = []){
+  constructor(title, dueDate, priority, projectID, notes = []){
     this.#title = title;
-    this.#description = description;
     this.#dueDate = dueDate;
     this.#priority = priority;
     this.#notes = notes;
-    this.#projectID = this.#projectID;
+    this.#projectID = projectID;
     this.#id = v4();
   }
   addNote(note){
     this.#notes.push(note);
     return this.#notes;
   };
-  getDescription(){
-    return this.#description;
-  }
   getDueDate(){
     return this.#dueDate;
   }
@@ -52,7 +47,6 @@ class ToDo {
     {\n
       \tid: ${this.#id};\n
       \ttitle: ${this.#title};\n
-      \tdescription: ${this.#description};\n
       \tdueDate: ${this.#dueDate};\n
       \tpriority: ${this.#priority};\n
     }`

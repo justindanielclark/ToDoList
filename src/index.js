@@ -4,14 +4,19 @@ import tailwindColors from 'tailwindcss/colors';
 import ProjectsCollection from './Models/ProjectsCollection.js';
 import newProjectModal from './Views/NewProjectModal.js';
 import newToDoModal from './Views/NewToDoModal.js';
+import IconMap from './Assets/IconMap.js';
+
+import edit from './Assets/SVGs/UI/edit.svg';
+import plus from './Assets/SVGs/UI/plus.svg';
+import minus from './Assets/SVGs/UI/minus.svg';
+import trashcan from './Assets/SVGs/UI/trash.svg';
 
 const App = (()=>{
-  const Priorities = ['low', 'med', 'high'];
   const State = (() => {
     const Projects = ProjectsCollection;
-    function createToDo(projectID, title, description, dueDate, priority, notes = []){
+    function createToDo(projectID, title, dueDate, priority, notes = []){
       const project = Projects.getProject(projectID);
-      const toDo = project.addToDo(title, description, dueDate, priority, notes = []);
+      const toDo = project.addToDo(title, dueDate, priority, notes);
       return toDo;
     }
     function deleteToDo(id){
@@ -51,10 +56,12 @@ const App = (()=>{
       
     }
   })()
+  // State.createProject('Backpacking', IconMap.backpack, 'green');
+  // State.createProject('Business Trip', IconMap.bag, 'amber');
+  // State.createProject('Sunday Party', IconMap.beer, 'rose');
+
   const View = (()=>{
-    const body = document.body;
     const header = document.querySelector('header');
-    const main = document.querySelector('main');
     const aside = document.querySelector('aside');
     const section = document.querySelector('section');
 
@@ -67,7 +74,6 @@ const App = (()=>{
       let asideUL = aside.querySelector('#asideProjectList');
       let notice = asideUL ? asideUL.querySelector('#asideNoProjectsNotice') : null;
       const projects = State.getProjects();
-      console.log(projects);
 
       //If Never Initialized, Ensure Aside Has Its Header and Project List
       if(!asideH1){
@@ -80,6 +86,7 @@ const App = (()=>{
       if(!asideUL){
         asideUL = document.createElement('ul');
           asideUL.id = 'asideProjectList';
+          asideUL.className = 'p-4'
         aside.append(asideUL);
       }
       //No Active Projects
@@ -100,14 +107,85 @@ const App = (()=>{
           const diff = projects.length - asideUL.children.length;
           for(let i = 0; i < diff; i++){
             const LI = document.createElement('li');
-            const button = document.createElement('button');
-              button.className= 'flex flex-row items-center px-6 py-2';
-            const buttonTitle = document.createElement('p');
-            const buttonIMG = document.createElement('img');
-              buttonIMG.className = `w-10 h-10 mx-2 p-1 rounded-full`
-            button.append(buttonIMG, buttonTitle);
-            LI.append(button)
+            LI.className = 'flex flex-col items-center mb-4';
+
+            const viewButton = document.createElement('button');
+            viewButton.className= 'viewButton flex flex-row justify-start w-full items-center';
+            const viewButtonTitle = document.createElement('p');
+            viewButtonTitle.className = 'viewButtonTitle pl-4 grow text-left'
+
+            const viewButtonLeftContainer = document.createElement('div');
+            viewButtonLeftContainer.className = 'viewButtonContainer relative';
+            const expandButton = document.createElement('button');
+            expandButton.className = 'absolute text-xl font-bold w-6 h-6 flex flex-row justify-center items-center bg-slate-900 text-neutral-100 rounded-full bottom-0 right-0 translate-y-1/4 translate-x-1/3' ;
+            expandButton.innerText = '+';
+            expandButton.addEventListener('click', handleClick_expandButton);
+            const noticeHighPrio = document.createElement('p');
+            noticeHighPrio.className = 'noticeHighPrio text-sm w-4 h-4 flex flex-row justify-center items-center absolute bg-red-600 text-neutral-100 rounded-full top-0 left-1/3 -translate-y-1/2 -translate-x-1/2 z-30 hidden';
+            const noticeMedPrio = document.createElement('p');
+            noticeMedPrio.className = 'noticeMedPrio text-sm w-4 h-4 flex flex-row justify-center items-center absolute bg-yellow-600 text-neutral-100 rounded-full top-0 left-0 z-30 hidden';
+            const noticeLowPrio = document.createElement('p');
+            noticeLowPrio.className = 'noticeLowPrio text-sm w-4 h-4 flex flex-row justify-center items-center absolute bg-green-600 text-neutral-100 rounded-full top-1/3 left-0 -translate-y-1/2 -translate-x-1/2 z-30 hidden';
+            const viewButtonIMG = document.createElement('img');
+            viewButtonIMG.className = `viewButtonImg w-14 h-14 p-2 rounded-full border border-slate-600`
+          
+            viewButtonLeftContainer.append(viewButtonIMG, expandButton, noticeLowPrio, noticeMedPrio, noticeHighPrio)
+            
+            
+            viewButton.append(viewButtonLeftContainer, viewButtonTitle);
+
+            const optionsGroup = document.createElement('div');
+            optionsGroup.className = 'flex flex-col w-full justify-start items-start max-h-0 mt-2 overflow-hidden gap-2'
+            optionsGroup.addEventListener('animationend', handleAnimationEnd_OptionsGroup);
+            const editOption = document.createElement('button');
+            editOption.className = 'flex flex-row items-center justify-start w-full';
+            const editImg = document.createElement('img');
+            editImg.className = 'w-7 h-7 p-1 rounded-lg ml-6';
+            editImg.src = edit;
+            editImg.alt = 'edit icon';
+            const editSpan = document.createElement('span');
+            editSpan.className = 'px-2';
+            editSpan.innerText = 'Edit Project';
+            editOption.append(editImg, editSpan);
+            const deleteOption = document.createElement('button');
+            deleteOption.className = 'flex flex-row items-center justify-start w-full';
+            const deleteImg = document.createElement('img');
+            deleteImg.className = 'w-7 h-7 p-1 rounded-lg ml-6';
+            deleteImg.src = trashcan;
+            deleteImg.alt = 'delete icon';
+            const deleteSpan = document.createElement('span');
+            deleteSpan.className = 'px-2'
+            deleteSpan.innerText = 'Delete Project';
+            deleteOption.append(deleteImg, deleteSpan);
+
+            optionsGroup.append(editOption, deleteOption);
+            
+            LI.append(viewButton, optionsGroup);
+
             asideUL.append(LI);
+            
+            function handleClick_expandButton(event){
+              if(optionsGroup.classList.contains('max-h-0')){
+                expandButton.innerText = '-';
+                optionsGroup.classList.remove('max-h-0');
+                optionsGroup.classList.add('animate-heightExpand');
+              } 
+              if(optionsGroup.classList.contains('h-auto')){
+                expandButton.innerText = '+';
+                optionsGroup.classList.remove('h-auto');
+                optionsGroup.classList.add('animate-heightContract');
+              }
+            }
+            function handleAnimationEnd_OptionsGroup(event){
+              if(event.animationName === 'heightExpand'){
+                this.classList.remove('animate-heightExpand');
+                this.classList.add('h-auto')
+              }
+              if(event.animationName === 'heightContract'){
+                this.classList.remove('animate-heightContract');
+                this.classList.add('max-h-0');
+              }
+            }
           }
         //If We Have Less Proects Than Displayed Ones, Remove LI's Until We Are Equal
         } else if(projects.length < asideUL.children.length) {
@@ -120,13 +198,44 @@ const App = (()=>{
         for(let i = 0; i < projects.length; i++){
           const li = asideUL.children[i];
             li.dataset.id = projects[i].getID();
-          const button = li.querySelector('button');
-          const img = button.querySelector('img');
-            console.log(tailwindColors);
-            img.style = `background-color: ${tailwindColors[projects[i].getColor()]['300']}`;
-            img.src = projects[i].getIconPath();
-          const p = button.querySelector('p');
-            p.innerText = projects[i].getName();
+          const viewButton = li.querySelector('.viewButton');
+          const viewImg = viewButton.querySelector('.viewButtonImg');
+            viewImg.style = `background-color: ${tailwindColors[projects[i].getColor()]['300']}`;
+            viewImg.src = projects[i].getIconPath();
+            viewImg.alt = `${projects[i].getName()} Project Icon`
+          const viewTitle = viewButton.querySelector('.viewButtonTitle');
+            viewTitle.innerText = projects[i].getName();
+          
+          const viewButtonContainer = viewButton.querySelector('.viewButtonContainer');
+
+          const noticeLowPrio = viewButtonContainer.querySelector('.noticeLowPrio');
+          const noticeMedPrio = viewButtonContainer.querySelector('.noticeMedPrio');
+          const noticeHighPrio = viewButtonContainer.querySelector('.noticeHighPrio');
+          const prios = projects[i].getNumPrios();
+          if(prios.high > 0){
+            noticeHighPrio.classList.remove('hidden');
+            noticeHighPrio.innerText = prios.high;
+          }
+          else {
+            noticeHighPrio.classList.add('hidden');
+            noticeHighPrio.innerText = prios.high;
+          }
+          if(prios.med > 0){
+            noticeMedPrio.classList.remove('hidden');
+            noticeMedPrio.innerText = prios.med;
+          }
+          else {
+            noticeMedPrio.classList.add('hidden');
+            noticeMedPrio.innerText = prios.med;
+          }
+          if(prios.low > 0){
+            noticeLowPrio.classList.remove('hidden');
+            noticeLowPrio.innerText = prios.low;
+          }
+          else {
+            noticeLowPrio.classList.add('hidden');
+            noticeLowPrio.innerText = prios.low;
+          }
         }
       }
     }
@@ -185,17 +294,22 @@ const App = (()=>{
     }
   })()
   function handleClick_NewProject(event){
-    body.prepend(
+    document.body.prepend(
       newProjectModal({
         createProject: State.createProject,
         updateAside: View.updateAside,
-        updateHeader: View.updateHeader
+        updateHeader: View.updateHeader,
       })
     );
   }
   function handleClick_NewToDo(event){
-    body.prepend(
-      newProjectModal({})
+    document.body.prepend(
+      newToDoModal({
+        projects: State.getProjects(),
+        createToDo: State.createToDo,
+        updateAside: View.updateAside,
+        updateSection: View.updateSection,
+      })
     );
   }
   return {State, View}

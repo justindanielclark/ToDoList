@@ -60,6 +60,7 @@ module.exports = {
     'justify-center',
     'list-disc',
     'list-inside',
+    'm-h-0',
     'overflow-y-scroll',
     'relative',
     'resize-none',
@@ -83,6 +84,8 @@ module.exports = {
       animation: {
         fadeIn: 'fadeIn .5s linear',
         fadeOut: 'fadeOut .5s linear',
+        heightContract: 'heightContract .15s linear',
+        heightExpand: 'heightExpand .15s linear',
         slideInTop: 'slideInTop .5s ease-in-out',
         slideInRight: 'slideInRight .5s ease-in-out',
         slideInBottom: 'slideInBottom .5s ease-in-out',
@@ -100,6 +103,14 @@ module.exports = {
         fadeOut: {
           '0%': {opacity: '1'},
           '100%': {opacity: '0'}
+        },
+        heightContract: {
+          '0%': {maxHeight: '100px'},
+          '100%': {maxHeight: '0'}
+        },
+        heightExpand: {
+          '0%': {maxHeight: '0'},
+          '100%': {maxHeight: '100px'}
         },
         slideInLeft: {
           '0%': {transform: 'translateX(400%)', opacity: '0'},

@@ -47,7 +47,7 @@ const newProjectModal = (props) => {
     nameInputGroupLabel.innerText = 'Project Name:';
     nameInputGroupLabel.id = 'newProjectModal_Name_Label';
     nameInputGroupLabel.htmlFor = 'projectName';
-    nameInputGroupLabel.className = 'text-neutral-100 text-base font-bold h-8 pr-2 basis-32 shrink-0 grow-0 text-right flex items-center justify-end transition-colors duration-300';
+    nameInputGroupLabel.className = 'autofill:text-neutral-100 text-neutral-100 text-base font-bold h-8 pr-2 basis-32 shrink-0 grow-0 text-right flex items-center justify-end transition-colors duration-300';
   const nameInputGroupTextInput = document.createElement('input');
     nameInputGroupTextInput.type = 'text';
     nameInputGroupTextInput.name = 'projectName';
@@ -97,7 +97,7 @@ const newProjectModal = (props) => {
       IconImg.alt = icon;
       IconImg.src = IconMap[icon];
     const IconRadioInput = document.createElement('input');
-      IconRadioInput.className = 'basis-0 h-0 w-0 shrink-1 grow-0';
+      IconRadioInput.className = 'basis-0 h-0 w-0 shrink-1 grow-0 sr-only';
       IconRadioInput.type = 'radio';
       IconRadioInput.name = 'projectIcons';
       IconRadioInput.value = `${icon}`;
@@ -158,6 +158,20 @@ const newProjectModal = (props) => {
     IconsContainer
   ];
 
+  //CLEANUP ANIMATION CLASSES ONCE ENDED
+  modalScreen.addEventListener('animationend', function(e){
+    const {animationName} = e;
+    if(animationName === 'fadeIn'){
+      this.classList.remove('animate-fadeIn');
+    }
+  });
+  modalForm.addEventListener('animationend', function(e){
+    const {animationName} = e;
+    if(animationName === 'slideInTop' || animationName === 'slideInRight' || animationName === 'slideInBottom' || animationName === 'slideInLeft'){
+      this.classList.remove('animate-slideInTop', 'animate-slideInRight', 'animate-slideInBottom', 'animate-slideInLeft');
+    }
+  });
+
   setModalColors(chosenColor, chosenColor);
   function setModalColors(oldColor, newColor){
     DarkColoredElements.forEach(element => {
@@ -174,8 +188,10 @@ const newProjectModal = (props) => {
       const newClass = `bg-${newColor}-${colorNum}`;
       if(element.classList.contains(oldClass)){
         element.classList.remove(`bg-${oldColor}-${colorNum}`);
+        element.classList.remove(`autofill:bg-${oldColor}-${colorNum}`);
       }
       element.classList.add(`bg-${newColor}-${colorNum}`);
+      element.classList.add(`autofill:bg-${newColor}-${colorNum}`);
     }
   }
   function handleClick_ColorButton(event){
@@ -210,10 +226,7 @@ const newProjectModal = (props) => {
     }
   }
   function destroy(){
-    modalScreen.classList.remove('animate-fadeIn');
     modalScreen.classList.add('animate-fadeOut');
-
-    modalForm.classList.remove('animate-slideInTop', 'animate-slideInRight', 'animate-slideInBottom', 'animate-slideInLeft');
     switch(Math.floor(Math.random()*4)){
       case 0: {
         modalForm.classList.add('animate-slideOutTop');

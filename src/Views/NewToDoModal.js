@@ -3,8 +3,15 @@ import '../Styles/index.css';
 import PossibleColors from '../Models/PossibleColors.js';
 
 const newToDoModal = (props) => {
-  let chosenColor = PossibleColors[Math.floor(Math.random()*PossibleColors.length)];
-  const priorities = [{text: 'High', val: 'high', color: 'red'},{text: 'Medium', val: 'med', color: 'yellow'},{text: 'Low', val: 'low', color: 'green'}];
+  const {projects, createToDo, updateAside, updateSection} = props;
+  
+  let chosenColor = projects[0].getColor();
+  const priorities = [
+    {text: 'High', val: 'high', color: 'red'},
+    {text: 'Medium', val: 'med', color: 'yellow'},
+    {text: 'Low', val: 'low', color: 'green'}
+  ];
+  let checkedPriority = 'low';
 
   const modal = document.createElement('div');
   modal.className = 'w-screen h-screen absolute flex flex-col items-center justify-center z-40'
@@ -31,15 +38,16 @@ const newToDoModal = (props) => {
   const projectInputGroupOptions = [];
   const projectInputGroupSelect = document.createElement('select');
   projectInputGroupSelect.className = 'flex-1 text-neutral-100 mr-2 transition-colors'
-    props.projects.forEach(project => {
+    projects.forEach(project => {
       const projectInputGroupOption = document.createElement('option');
       projectInputGroupOption.className = "transition-colors";
       projectInputGroupOption.innerText = project.getName();
-      projectInputGroupOption.dataset.project = project.getName()
+      projectInputGroupOption.dataset.project = project.getID()
       projectInputGroupOption.dataset.color = project.getColor();
       projectInputGroupSelect.append(projectInputGroupOption);
       projectInputGroupOptions.push(projectInputGroupOption);
     })
+  projectInputGroupSelect.addEventListener('change', handleChange_projectSelect);
   projectInputGroup.append(projectInputGroupLabel, projectInputGroupSelect);
 
   const nameInputGroup = document.createElement('div');
@@ -56,7 +64,7 @@ const newToDoModal = (props) => {
     nameInputGroupTextInput.maxLength = 20;
     nameInputGroupTextInput.className = 'text-base outline-0 text-neutral-50 w-full mr-2 px-1 transition-colors';
     nameInputGroupTextInput.value = "";
-    nameInputGroupTextInput.placeholder = "Please Enter a Todo Name";
+    nameInputGroupTextInput.placeholder = "Enter a Todo Name";
   nameInputGroup.append(nameInputGroupLabel, nameInputGroupTextInput);
 
   const dueDateInputGroup = document.createElement('div');
@@ -86,24 +94,26 @@ const newToDoModal = (props) => {
     priorityInputGroupRadioContainer.id = 'newToDoModal_Priority_RadioContainer';
     priorityInputGroupRadioContainer.className = 'flex flex-col text-base text-neutral-50 w-full mr-2 px-1 transition-colors';
   priorities.forEach(priority => {
-    const id = `priority_${priority.val}`;
+    const {text, val, color} = priority;
+    const id = `priority_${val}`;
     const priorityLabel = document.createElement('label');
     priorityLabel.htmlFor = id;
-    priorityLabel.className = 'flex flex-row justify-center items-center relative'
+    priorityLabel.className = 'flex flex-row justify-center items-center relative cursor-pointer'
     const prioritySpan = document.createElement('span');
-    prioritySpan.innerText = priority.text;
+    prioritySpan.innerText = text;
     prioritySpan.className = "flex-1"
     const priorityRadio = document.createElement('input');
     priorityRadio.type = 'radio';
     priorityRadio.name = 'priority';
-    priorityRadio.value = priority.val;
+    priorityRadio.value = val;
     priorityRadio.id = id;
-    priorityRadio.className = "peer sr-only"
-    if(priority.val = 'low'){
+    priorityRadio.className = "peer sr-only";
+    priorityRadio.addEventListener('click', (e)=>{handleClick_PriorityRadio(e, val)});
+    if(val === checkedPriority){
       priorityRadio.checked = true;
     }
     const priorityColorFlag = document.createElement('div');
-    priorityColorFlag.className = `bg-${priority.color}-500 border border-${priority.color}-300 basis-4 h-4 peer-checked:basis-12`
+    priorityColorFlag.className = `bg-${color}-500 border border-${color}-300 basis-4 h-4 peer-checked:basis-12 transition-all`
     priorityLabel.append(prioritySpan, priorityRadio, priorityColorFlag,);
     priorityInputGroupRadioContainer.append(priorityLabel);
   })
@@ -130,10 +140,12 @@ const newToDoModal = (props) => {
     addNoteButton.innerText = "+";
     addNoteButton.className = "text-lg font-bold rounded-md hover:bg-green-800 bg-green-700 text-green-50 my-1 flex-1 border border-green-700 transition-colors";
     addNoteButton.id = 'newToDoModal_Notes_AddNoteButton';
+    addNoteButton.addEventListener('click', handleClick_addNoteButton);
   const removeNoteButton = document.createElement('button');
     removeNoteButton.innerText = "-";
     removeNoteButton.id = 'newToDoModal_Notes_RemoveNoteButton';
     removeNoteButton.className = "text-lg font-bold rounded-md hover:bg-red-800 bg-red-700 text-red-50 my-1 flex-1 border border-red-700 transition-colors";
+    removeNoteButton.addEventListener('click', handleClick_removeNoteButton);
   notesContainerControls.append(removeNoteButton, addNoteButton);
   const notesList = document.createElement('ul');
     notesList.className = "list-disc list-inside"
@@ -148,20 +160,16 @@ const newToDoModal = (props) => {
     controlsInputGroupCancelButton.innerText = 'Cancel';
     controlsInputGroupCancelButton.id = 'newProjectModal_ControlsGroup_CancelButton';
     controlsInputGroupCancelButton.className = 'text-lg rounded-md hover:bg-red-800 bg-red-700 text-red-50 px-2 py-1';
+    controlsInputGroupCancelButton.addEventListener('click', handleClick_CancelButton);
   const controlsInputGroupAcceptButton = document.createElement('button');
     controlsInputGroupAcceptButton.innerText = 'Accept';
     controlsInputGroupAcceptButton.id = 'newProjectModal_ControlsGroup_AcceptButton';
     controlsInputGroupAcceptButton.className = 'text-lg rounded-md hover:bg-green-800 bg-green-700 text-green-50 px-2 py-1';
+    controlsInputGroupAcceptButton.addEventListener('click', handleClick_AcceptButton);
   controlsInputGroup.append(controlsInputGroupCancelButton, controlsInputGroupAcceptButton);
 
   modalForm.append(modalTitle, projectInputGroup, nameInputGroup, dueDateInputGroup, priorityInputGroup, notesInputGroup, controlsInputGroup);
   modal.append(modalScreen, modalForm)
-  document.body.prepend(modal);
-
-  //WIRING
-  addNoteButton.addEventListener('click', handleClick_addNoteButton);
-  removeNoteButton.addEventListener('click', handleClick_removeNoteButton);
-  projectInputGroupSelect.addEventListener('change', handleChange_projectSelect);
 
   const DarkColoredElements = [
     projectInputGroup,
@@ -188,9 +196,27 @@ const newToDoModal = (props) => {
     notesTextArea
   ];
 
-  setModalColors(chosenColor, chosenColor);
+  //CLEANUP ANIMATION CLASSES ONCE ENDED
+  modalScreen.addEventListener('animationend', function(e){
+    const {animationName} = e;
+    if(animationName === 'fadeIn'){
+      this.classList.remove('animate-fadeIn');
+    }
+  });
+  modalForm.addEventListener('animationend', function(e){
+    const {animationName} = e;
+    if(animationName === 'slideInTop' || animationName === 'slideInRight' || animationName === 'slideInBottom' || animationName === 'slideInLeft'){
+      this.classList.remove('animate-slideInTop', 'animate-slideInRight', 'animate-slideInBottom', 'animate-slideInLeft');
+    }
+  });
 
+  setModalColors(chosenColor, chosenColor);
   function setModalColors(oldColor, newColor){
+    const oldTextAreaTextClass = `text-${oldColor}-900`;
+    const newTextAreaTextClass = `text-${newColor}-900`;
+    notesTextArea.classList.remove(oldTextAreaTextClass);
+    notesTextArea.classList.add(newTextAreaTextClass);
+
     DarkColoredElements.forEach(element => {
       setElementBackgroundColor(element, oldColor, newColor, 900);
     });
@@ -203,10 +229,35 @@ const newToDoModal = (props) => {
     function setElementBackgroundColor(element, oldColor, newColor, colorNum){
       const oldClass = `bg-${oldColor}-${colorNum}`;
       const newClass = `bg-${newColor}-${colorNum}`;
-      if(element.classList.contains(oldClass)){
-        element.classList.remove(`bg-${oldColor}-${colorNum}`);
-      }
-      element.classList.add(`bg-${newColor}-${colorNum}`);
+      element.classList.remove(oldClass);
+      element.classList.add(newClass);
+    }
+  }
+  function handleClick_AcceptButton(event){
+    const projectID = projectInputGroupSelect.selectedOptions[0].dataset.project;
+    const toDoName = nameInputGroupTextInput.value;
+    const dueDate = dueDateInputGroupInput.value;
+    const priority = checkedPriority;
+    const notes = [];
+    Array.from(notesList.children).forEach(note=>{
+      notes.push(note.innerText)
+    })
+    console.log({
+      projectID,
+      toDoName,
+      dueDate,
+      priority,
+      notes
+    })
+
+    if(!projectID || !toDoName || !dueDate || !priority){
+      //TODO
+      console.log('Not Today Zerg!');
+    } else {
+      createToDo(projectID, toDoName, dueDate, priority, notes);
+      updateAside();
+      updateSection();
+      destroy();
     }
   }
   function handleClick_addNoteButton(event){
@@ -218,10 +269,16 @@ const newToDoModal = (props) => {
       notesList.append(noteListItem);
     }
   }
+  function handleClick_CancelButton(event){
+    destroy();
+  }
   function handleClick_removeNoteButton(event){
     if(notesList.lastChild){
       notesList.removeChild(notesList.lastChild);
     }
+  }
+  function handleClick_PriorityRadio(event, priority){
+    checkedPriority = priority;
   }
   function handleChange_projectSelect(event){
     const children = event.target.children;
@@ -234,7 +291,31 @@ const newToDoModal = (props) => {
     setModalColors(chosenColor, chosenOption.dataset.color);
     chosenColor = chosenOption.dataset.color;
   }
-
+  function destroy(){
+    modalScreen.classList.add('animate-fadeOut');
+    switch(Math.floor(Math.random()*4)){
+      case 0: {
+        modalForm.classList.add('animate-slideOutTop');
+        break;
+      }
+      case 1: {
+        modalForm.classList.add('animate-slideOutRight');
+        break;
+      }
+      case 2: {
+        modalForm.classList.add('animate-slideOutBottom');
+        break;
+      }
+      case 3: {
+        modalForm.classList.add('animate-slideOutLeft');
+        break;
+      }
+    }
+    modalForm.addEventListener('animationend', ()=>{
+      modal.parentNode.removeChild(modal);
+    })
+  }
+  return modal;
 }
 
 export default newToDoModal;
