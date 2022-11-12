@@ -1,6 +1,6 @@
 'use strict';
 import '../Styles/index.css';
-import PossibleColors from '../Models/PossibleColors.js';
+import PossibleColors from '../../../Models/PossibleColors.js';
 
 const newToDoModal = (props) => {
   const {projects, createToDo, updateAside, updateSection} = props;
