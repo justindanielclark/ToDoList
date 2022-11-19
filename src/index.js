@@ -152,10 +152,8 @@ const App = (()=>{
       //Subscribers: ProjectListItem.js
       Controller.publish(`projectEdited_${toDo.getProjectID()}`, {project})
     }
-
     //Subscribers: ToDoView.js
     Controller.publish(`toDoEdited_${toDo.getID()}`, {toDo, project});
-
     function updateToDoValues(){
       toDo.setTitle(toDoName);
       toDo.setDueDate(new Date(dueDate));

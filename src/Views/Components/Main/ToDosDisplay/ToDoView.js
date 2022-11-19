@@ -278,6 +278,16 @@ const ToDoView = (root, controller, toDo, project) => {
   }
   function _on_toDoEdit(args){
     const {toDo, project} = args;
+    while(ProjectSubscriptions.length > 0){
+      Subscriber.unsubscribe(ProjectSubscriptions.pop());
+    }
+    ProjectSubscriptions.push(
+      new Subscription(`projectDeleted_${project.getID()}`, _on_projectDeleted),
+      new Subscription(`projectEdited_${project.getID()}`, _on_projectEdited),
+      new Subscription(`projectHidden_${project.getID()}`, _on_projectHidden),
+      new Subscription(`projectShown_${project.getID()}`, _on_projectShown)
+    )
+    Subscriber.subscribe(...ProjectSubscriptions);
     _update(toDo, project);
   }
   function _on_projectDeleted(args){
