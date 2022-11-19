@@ -9,9 +9,10 @@ const ProjectsDisplay = (root, controller) => {
   //*CSS Tailwind Declarations
   const _classes = {
     base: {
-      self: 'bg-slate-700 text-slate-100 flex flex-col lg:w-64 overflow-y-auto',
+      self: 'bg-slate-700 text-slate-100 flex flex-col lg:w-72 overflow-y-auto',
       title: 'text-2xl p-4 text-neutral-100',
-      projectsList: 'p-4 flex flex-col',
+      topContainer: 'flex flex-row',
+      projectsList: 'pl-2 pr-4 flex flex-col',
       noCurrentProjectsNotice: 'px-2 text-center'
     },
   }
@@ -24,16 +25,19 @@ const ProjectsDisplay = (root, controller) => {
   //*DOM Creation
   const _self = document.createElement('aside');
     _self.className = _classes.base.self;
-  const _title = document.createElement('h1');
-    _title.innerText = 'Projects:';
-    _title.className = _classes.base.title;
+  const _topContainer = document.createElement('div');
+    _topContainer.className = _classes.base.topContainer;
+    const _title = document.createElement('h1');
+      _title.innerText = 'Projects:';
+      _title.className = _classes.base.title;
+  _topContainer.append(_title);
   const _projectList = document.createElement('ul');
     _projectList.className = _classes.base.projectsList;
   const _noCurrentProjectsNotice = document.createElement('p')
     _noCurrentProjectsNotice.className = _classes.base.noCurrentProjectsNotice;
     _noCurrentProjectsNotice.innerText = '<No Projects To Display>';
   _projectList.append(_noCurrentProjectsNotice);
-  _self.append(_title, _projectList);
+  _self.append(_topContainer, _projectList);
   root.append(_self);
   function _onProjectCreate(args){
     const {project, projects} = args;

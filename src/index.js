@@ -74,6 +74,7 @@ const App = (()=>{
     Footer(root);
   })()
 
+  //*Subscriber Functions
   Subscriber.subscribe(
     new Subscription('createToDo', createToDo),
     new Subscription('deleteToDo', deleteToDo),
@@ -109,7 +110,9 @@ const App = (()=>{
     const project = State.deleteProject(id);
     const projects = State.getProjects();
     //Subscribers: Header.js, ProjectDisplay.js
-    Controller.publish('projectDeleted', {project, projects}) 
+    Controller.publish('projectDeleted', {project, projects})
+    //Subscribers: toDoView.js
+    Controller.publish(`projectDeleted_${id}`, {});
     return project;
   }
   function deleteToDo(args){
@@ -267,7 +270,7 @@ const App = (()=>{
       dueDate: '2022-12-01',
       priority: 'high',
     })
-    let Groceries = createProject({projectName: 'Groceries', iconName: 'pizza', color: 'purple'})
+    let Groceries = createProject({projectName: 'Groceries', iconName: 'cart', color: 'red'})
     createToDo({
       projectID: Groceries.getID(),
       toDoName: 'Chana Masala Ingredients',

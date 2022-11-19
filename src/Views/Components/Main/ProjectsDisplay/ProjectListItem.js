@@ -1,5 +1,7 @@
-import edit from '../../../../Assets/SVGs/UI/edit.svg'
-import trash from '../../../../Assets/SVGs/UI/trash.svg'
+import edit from '../../../../Assets/SVGs/UI/edit.svg';
+import trash from '../../../../Assets/SVGs/UI/trash.svg';
+import down from '../../../../Assets/SVGs/UI/down.svg';
+import up from '../../../../Assets/SVGs/UI/up.svg';
 import IconMap from '../../../../Assets/IconMap';
 import EditProjectModal from '../../Modals/EditProjectModal';
 
@@ -26,7 +28,7 @@ const ProjectListItem = (root, controller, project) => {
       bottomContainerButtonsSpan: 'pl-2',
       checkBox: 'w-5 h-5 ring-slate-900 ring-2 ml-5',
       topContainer: 'flex flex-row justify-start w-full items-center',
-      topContainerLeft: 'relative p-2 rounded-full border-slate-600 border',
+      infoContainer: 'relative p-2 rounded-full border-slate-600 border',
       projectButton: 'flex flex-row items-center justify-start w-full hover:bg-slate-600 active:bg-slate-500 transition-colors duration-300',
       expandContractButton: 'absolute text-xl font-bold w-6 h-6 flex flex-row justify-center items-center bg-slate-900 text-neutral-100 rounded-full bottom-0 right-0 translate-y-1/4 translate-x-1/3 hover:bg-slate-500',
       projectIMG: 'w-10 h-10',
@@ -34,6 +36,10 @@ const ProjectListItem = (root, controller, project) => {
       noticeContainer: 'flex flex-row absolute top-0 left-0 -translate-x-1 -translate-y-3',
       self: 'flex flex-col items-center mb-4',
       title: 'pl-4 lg:grow text-left',
+      orderContainer: 'flex flex-col justify-between',
+      orderContainerFlexFill: 'grow-1 shrink-1 basis-1',
+      orderButton: 'basis-6 max-h-6 w-6 hover:bg-slate-600 rounded-lg grow-0 shrink-0',
+      orderButtonImg: 'h-full w-full',
     },
     mixins: {
       highPrioNotice: 'bg-red-600',
@@ -80,9 +86,30 @@ const ProjectListItem = (root, controller, project) => {
     //self -> topContainer
     const _topContainer = document.createElement('div');
       _topContainer.className = _classes.base.topContainer;
-      //self -> topContainer -> topContainerLeft
-      const _topContainerLeft = document.createElement('div');
-        _topContainerLeft.className = [_classes.base.topContainerLeft, _classes.mixins.imgColors[_color]].join(' ');
+      //self -> topContainer -> orderContainer
+      const _orderContainer = document.createElement('div');
+        _orderContainer.className = _classes.base.orderContainer;
+        const _moveOrderUpButton = document.createElement('button');
+        _moveOrderUpButton.className = _classes.base.orderButton;
+          const _moveOrderUpButtonImg = document.createElement('img');
+          _moveOrderUpButtonImg.className = _classes.base.orderButtonImg;
+          _moveOrderUpButtonImg.src = up;
+          _moveOrderUpButtonImg.alt = 'up_arrow'
+        _moveOrderUpButton.append(_moveOrderUpButtonImg);
+        const _orderContainerFlexFiller = document.createElement('div');
+        _orderContainerFlexFiller.className = _classes.base.orderContainerFlexFill;
+        const _moveOrderDownButton = document.createElement('button');
+        _moveOrderDownButton.className = _classes.base.orderButton;
+          const _moveOrderDownButtonImg = document.createElement('img');
+          _moveOrderDownButtonImg.className = _classes.base.orderButtonImg;
+          _moveOrderDownButtonImg.src = down;
+          _moveOrderDownButtonImg.alt = 'down_arrow'
+        _moveOrderDownButton.append(_moveOrderDownButtonImg);
+      _orderContainer.append(_moveOrderUpButton, _orderContainerFlexFiller, _moveOrderDownButton);
+
+      //self -> topContainer -> infoContainer
+      const _infoContainer = document.createElement('div');
+        _infoContainer.className = [_classes.base.infoContainer, _classes.mixins.imgColors[_color]].join(' ');
         const _projectIMG = document.createElement('img');
           _projectIMG.className = _classes.base.projectIMG;
         const _expandContractButton = document.createElement('button');
@@ -98,7 +125,7 @@ const ProjectListItem = (root, controller, project) => {
         const _noticeLowPrio = document.createElement('p');
           _noticeLowPrio.className = [_classes.base.notice, _classes.mixins.lowPrioNotice, _classes.mixins.hidden].join(' ');
         _noticeContainer.append(_noticeHighPrio, _noticeMedPrio, _noticeLowPrio);
-      _topContainerLeft.append(_projectIMG, _expandContractButton, _noticeContainer);
+      _infoContainer.append(_projectIMG, _expandContractButton, _noticeContainer);
       //self -> topContainer -> title (right)
       const _title = document.createElement('h2');
         _title.className = _classes.base.title;
@@ -107,7 +134,7 @@ const ProjectListItem = (root, controller, project) => {
         _checkBox.className = _classes.base.checkBox;
         _checkBox.checked = true;
         _checkBox.addEventListener('click', _handleClick_toDisplayCheckBox);
-    _topContainer.append(_topContainerLeft, _title, _checkBox);
+    _topContainer.append(_orderContainer, _infoContainer, _title, _checkBox);
     //self -> bottomContainer
     const _bottomContainer = document.createElement('div');
       _bottomContainer.className = [_classes.base.bottomContainer, _classes.mixins.maxHeightZero, _classes.mixins.hidden].join(' ');
@@ -226,9 +253,9 @@ const ProjectListItem = (root, controller, project) => {
     _id = projectID;
 
     if(_color !== projectColor){
-      _topContainerLeft.classList.remove(_classes.mixins.imgColors[_color])
+      _infoContainer.classList.remove(_classes.mixins.imgColors[_color])
       _color = projectColor;
-      _topContainerLeft.classList.add(_classes.mixins.imgColors[_color]);
+      _infoContainer.classList.add(_classes.mixins.imgColors[_color]);
     }
     
     _projectIMG.src = projectIconPath;

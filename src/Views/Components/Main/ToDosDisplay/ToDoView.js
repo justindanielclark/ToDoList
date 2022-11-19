@@ -10,7 +10,8 @@ const ToDoView = (root, controller, toDo, project) => {
       topContainer: 'flex flex-row items-baseline relative h-5 flex-initial',
       bottomContainer: 'ml-6 relative rounded-md flex-auto',
       prioNotice: 'w-3 h-3 rounded-full -translate-y-full z-30',
-      projectIconImg: 'w-8 h-8 p-1 rounded-full z-20',
+      projectImgContainer: 'w-8 h-8 rounded-full z-20',
+      projectIconImg: 'p-1',
       viewDueDate: 'text-xs pl-2 -translate-y-full',
       viewTitle: 'text-lg font-bold py-1 pl-2 flex-initial rounded-lg',
       viewNote: 'px-2 text-xs break-words',
@@ -207,8 +208,11 @@ const ToDoView = (root, controller, toDo, project) => {
     _self.addEventListener('animationend', _handleAnimationEnd);
   const _topContainer = document.createElement('div');
     _topContainer.className = _classes.base.topContainer;
-    const _projectIconImg = document.createElement('img');
-      _projectIconImg.className = _classes.base.projectIconImg;
+    const _projectImgContainer = document.createElement('div');
+    _projectImgContainer.className = _classes.base.projectImgContainer;
+      const _projectIconImg = document.createElement('img');
+        _projectIconImg.className = _classes.base.projectIconImg;
+    _projectImgContainer.append(_projectIconImg)
     const _viewDueDate = document.createElement('p');
       _viewDueDate.className = _classes.base.viewDueDate;
     const _prioNotice = document.createElement('div');
@@ -230,7 +234,7 @@ const ToDoView = (root, controller, toDo, project) => {
         _toDoViewControl_delete_img.alt = 'trash_icon';
       _toDoViewControl_delete.append(_toDoViewControl_delete_img);
     _toDoViewControls.append(_toDoViewControl_edit, _toDoViewControl_delete);
-  _topContainer.append(_projectIconImg, _prioNotice, _viewDueDate, _toDoViewControls);
+  _topContainer.append(_projectImgContainer, _prioNotice, _viewDueDate, _toDoViewControls);
   const _bottomContainer = document.createElement('div');
     _bottomContainer.className = _classes.base.bottomContainer;
     const _viewTitle = document.createElement('h3');
@@ -245,7 +249,7 @@ const ToDoView = (root, controller, toDo, project) => {
   _viewTitle.classList.add(_classes.mixins.colors[_color].titleBackgroundColor);
   _viewTitle.classList.add(_classes.mixins.colors[_color].textColorLight);
   _viewDueDate.classList.add(_classes.mixins.colors[_color].textColorLight);
-  _projectIconImg.classList.add(_classes.mixins.colors[_color].backgroundIconImg);
+  _projectImgContainer.classList.add(_classes.mixins.colors[_color].backgroundIconImg);
   _prioNotice.classList.add(_classes.mixins.prioBackgroundColor[_priority]);
 
   _update(toDo, project);
@@ -328,13 +332,13 @@ const ToDoView = (root, controller, toDo, project) => {
       _viewTitle.classList.remove(_classes.mixins.colors[_color].titleBackgroundColor);
       _viewTitle.classList.remove(_classes.mixins.colors[_color].textColorLight);
       _viewDueDate.classList.remove(_classes.mixins.colors[_color].textColorLight);
-      _projectIconImg.classList.remove(_classes.mixins.colors[_color].backgroundIconImg);
+      _projectImgContainer.classList.remove(_classes.mixins.colors[_color].backgroundIconImg);
       _color = project.getColor();
       _viewNotes.classList.add(_classes.mixins.colors[_color].backgroundColorLight);
       _viewTitle.classList.add(_classes.mixins.colors[_color].titleBackgroundColor);
       _viewTitle.classList.add(_classes.mixins.colors[_color].textColorLight);
       _viewDueDate.classList.add(_classes.mixins.colors[_color].textColorLight);
-      _projectIconImg.classList.add(_classes.mixins.colors[_color].backgroundIconImg);
+      _projectImgContainer.classList.add(_classes.mixins.colors[_color].backgroundIconImg);
     }
     //Set Priority
     if(_priority !== toDo.getPriority()){
