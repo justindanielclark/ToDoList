@@ -141,8 +141,8 @@ const App = (()=>{
       updateToDoValues();
       newProject.transferToDo(toDo);
       //Subscribers: ProjectListItem.js
-      Controller.publish(`projectEdited_${toDo.getProjectID()}`, {project: oldProject});
-      Controller.publish(`projectEdited_${projectID}`, {project: newProject});
+      Controller.publish(`projectEdited_updatePrioNotices_${toDo.getProjectID()}`, {project: oldProject});
+      Controller.publish(`projectEdited_updatePrioNotices_${projectID}`, {project: newProject});
       toDo.setProjectID(project.getID());
     } else {
       if(priority !== toDo.getPriority()){
@@ -150,7 +150,7 @@ const App = (()=>{
       }
       updateToDoValues();
       //Subscribers: ProjectListItem.js
-      Controller.publish(`projectEdited_${toDo.getProjectID()}`, {project})
+      Controller.publish(`projectEdited_updatePrioNotices_${toDo.getProjectID()}`, {project})
     }
     //Subscribers: ToDoView.js
     Controller.publish(`toDoEdited_${toDo.getID()}`, {toDo, project});

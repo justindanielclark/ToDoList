@@ -19,6 +19,7 @@ const ProjectListItem = (root, controller, project) => {
     new Subscription(`toDoCreated_${_id}`, _updatePrioNotices),
     new Subscription(`toDoDeleted_${_id}`, _updatePrioNotices),
     new Subscription(`projectEdited_${_id}`, _onProjectEdit),
+    new Subscription(`projectEdited_updatePrioNotices_${_id}`, _updatePrioNotices)
   )
   //*CSS Tailwind Style Declarations
   const _classes = {

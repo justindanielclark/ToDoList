@@ -335,6 +335,7 @@ const ToDoView = (root, controller, toDo, project) => {
   }
   function _update(updateToDo, updateProject){
     [toDo, project] = [updateToDo, updateProject];
+    console.log('_update called in ToDoView.js');
     _projectID = toDo.getProjectID();
     _toDoID = toDo.getID();
     _title = toDo.getTitle();
