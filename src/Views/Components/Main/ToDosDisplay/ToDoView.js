@@ -192,8 +192,14 @@ const ToDoView = (root, controller, toDo, project) => {
   const Subscription = controller.Subscription;
   const Subscriber = controller.subscriberWrapper({});
   const Publisher = controller.publisherWrapper({});
+  const ProjectSubscriptions = [
+    // new Subscription(`projectEdited_${_projectID}`, _on_projectEdited);
+    new Subscription(`projectHidden_${_projectID}`, _on_projectHidden),
+    new Subscription(`projectShown_${_projectID}`, _on_projectShown)
+  ];
   Subscriber.subscribe(
-    new Subscription(`toDoEdited_${_toDoID}`, _handleSubscription_toDoEdit)
+    new Subscription(`toDoEdited_${_toDoID}`, _on_toDoEdit),
+    ...ProjectSubscriptions,
   )
   //*DOM Creation
   const _self = document.createElement('li');
@@ -265,9 +271,19 @@ const ToDoView = (root, controller, toDo, project) => {
   function _handleClick_DeleteButton(event){
     _destroy();
   }
-  function _handleSubscription_toDoEdit(args){
+  function _on_toDoEdit(args){
     const {toDo, project} = args;
     _update(toDo, project);
+  }
+  // function _on_projectEdited(args){
+
+  // }
+  function _on_projectHidden(args){
+    console.log(`hit in toDoView`);
+    _hide();
+  }
+  function _on_projectShown(args){
+    _show();
   }
   function _hide(){
     _self.classList.add(_classes.animations.contractAndFadeOut);

@@ -209,9 +209,9 @@ const ProjectListItem = (root, controller, project) => {
   function _handleClick_toDisplayCheckBox(e){
     const {checked} = e.target
     if(checked){
-      controller.publish(`projectShow`, {projectID: _id}); // Listeners: tdDisplay
+      controller.publish(`showProject`, {projectID: _id}); // Listeners: index(state)
     } else {
-      controller.publish(`projectHide`, {projectID: _id}); // Listeners: tdDisplay, tdView
+      controller.publish(`hideProject`, {projectID: _id}); // Listeners: index(state)
     }
   }
   function _onProjectEdit(args){

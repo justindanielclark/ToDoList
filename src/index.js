@@ -83,7 +83,8 @@ const App = (()=>{
     new Subscription('editProject', editProject),
     new Subscription('getProject', getProject),
     new Subscription('getProjects', getProjects),
-    new Subscription('hideProject', hideProject)
+    new Subscription('hideProject', hideProject),
+    new Subscription('showProject', showProject),
   )
   function createProject(args){
     const {projectName, iconName, color} = args;
@@ -171,7 +172,17 @@ const App = (()=>{
     return projects;
   }
   function hideProject(args){
-    
+    const {projectID} = args;
+    console.log(`hit: ${projectID}`)
+    const project = State.getProject(projectID);
+    project.setShowing(false);
+    Controller.publish(`projectHidden_${projectID}`, null)
+  }
+  function showProject(args){
+    const {projectID} = args;
+    const project = State.getProject(projectID);
+    project.setShowing(true);
+    Controller.publish(`projectShown_${projectID}`, null)
   }
   //Initializing Some Data
   {
