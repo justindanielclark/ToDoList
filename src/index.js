@@ -125,7 +125,7 @@ const App = (()=>{
     project.setName(projectName);
     project.setIconName(iconName);
     project.setColor(color);
-    //Subscribers: ProjectListItem.js
+    //Subscribers: ProjectListItem.js, ToDoView.js
     Controller.publish(`projectEdited_${projectID}`, {project});
   }
   function editToDo(args){
@@ -173,15 +173,16 @@ const App = (()=>{
   }
   function hideProject(args){
     const {projectID} = args;
-    console.log(`hit: ${projectID}`)
     const project = State.getProject(projectID);
     project.setShowing(false);
+    //Subscribers: ToDoView.js
     Controller.publish(`projectHidden_${projectID}`, null)
   }
   function showProject(args){
     const {projectID} = args;
     const project = State.getProject(projectID);
     project.setShowing(true);
+    //Subscribers: ToDoView.js
     Controller.publish(`projectShown_${projectID}`, null)
   }
   //Initializing Some Data
@@ -238,9 +239,76 @@ const App = (()=>{
       priority: 'low',
       notes: ['Johnson Account']
     })
-    // let Housekeeping = createProject({projectName: 'Housekeeping', iconName: 'bulb', color: 'blue'})
-    // let Groceries = createProject({projectName: 'Groceries', iconName: 'pizza', color: 'purple'})
-    // let Valentines = createProject({projectName: 'Valentines Day', iconName: 'heart', color: 'pink'})
+    let Housekeeping = createProject({projectName: 'Housekeeping', iconName: 'bulb', color: 'orange'})
+    createToDo({
+      projectID: Housekeeping.getID(),
+      toDoName: 'Mop',
+      dueDate: '2022-12-01',
+      priority: 'med',
+      notes: ['Kitchen']
+    })
+    createToDo({
+      projectID: Housekeeping.getID(),
+      toDoName: 'Mop',
+      dueDate: '2022-12-01',
+      priority: 'med',
+      notes: ['Living Room']
+    })
+    createToDo({
+      projectID: Housekeeping.getID(),
+      toDoName: 'Mop',
+      dueDate: '2022-12-01',
+      priority: 'med',
+      notes: ['Bathroom']
+    })
+    createToDo({
+      projectID: Housekeeping.getID(),
+      toDoName: 'Do Dishes',
+      dueDate: '2022-12-01',
+      priority: 'high',
+    })
+    let Groceries = createProject({projectName: 'Groceries', iconName: 'pizza', color: 'purple'})
+    createToDo({
+      projectID: Groceries.getID(),
+      toDoName: 'Chana Masala Ingredients',
+      dueDate: '2022-12-01',
+      priority: 'high',
+      notes: ['Jalapeno', 'Garam Masala', 'Coriander', 'Red Pepper']
+    })
+    createToDo({
+      projectID: Groceries.getID(),
+      toDoName: 'Japanese Curry',
+      dueDate: '2022-11-25',
+      priority: 'low',
+      notes: ['Med Spicy', 'x2']
+    })
+    let Valentines = createProject({projectName: 'Valentines Day', iconName: 'heart', color: 'pink'})
+    createToDo({
+      projectID: Valentines.getID(),
+      toDoName: 'Buy Flowers',
+      dueDate: '2023-2-14',
+      priority: 'low',
+      notes: ['Peonies']
+    })
+    createToDo({
+      projectID: Valentines.getID(),
+      toDoName: 'Buy Chocolates',
+      dueDate: '2023-2-14',
+      priority: 'low',
+    })
+    createToDo({
+      projectID: Valentines.getID(),
+      toDoName: 'Get Suit Dry Cleaned',
+      dueDate: '2023-2-14',
+      priority: 'low',
+    })
+    createToDo({
+      projectID: Valentines.getID(),
+      toDoName: 'Get Reservations',
+      dueDate: '2023-2-14',
+      priority: 'high',
+      notes: ['Seabird Cafe']
+    })
   }
   return {
     State,

@@ -9,7 +9,7 @@ const ProjectsDisplay = (root, controller) => {
   //*CSS Tailwind Declarations
   const _classes = {
     base: {
-      self: 'bg-slate-700 text-slate-100 flex flex-col sm:w-64 overflow-y-auto',
+      self: 'bg-slate-700 text-slate-100 flex flex-col lg:w-64 overflow-y-auto',
       title: 'text-2xl p-4 text-neutral-100',
       projectsList: 'p-4 flex flex-col',
       noCurrentProjectsNotice: 'px-2 text-center'
@@ -17,7 +17,7 @@ const ProjectsDisplay = (root, controller) => {
   }
   //*Utility Closure Variables
   const _listItems = [];
-  const _intervalTimer = 150;
+  const _intervalTimer = 250;
   let toDisplayQueue = [];
   let areProjectsQueued = false;
 

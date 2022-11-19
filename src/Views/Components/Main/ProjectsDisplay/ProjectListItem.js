@@ -24,7 +24,7 @@ const ProjectListItem = (root, controller, project) => {
       bottomContainer: 'flex flex-col w-full justify-start items-start mt-2 overflow-hidden gap-2',
       bottomContainerButtonsIMG: 'w-7 h-7 p-1 rounded-lg ml-6',
       bottomContainerButtonsSpan: 'pl-2',
-      checkBox: 'w-5 h-5 ring-slate-900 ring-2',
+      checkBox: 'w-5 h-5 ring-slate-900 ring-2 ml-5',
       topContainer: 'flex flex-row justify-start w-full items-center',
       topContainerLeft: 'relative p-2 rounded-full border-slate-600 border',
       projectButton: 'flex flex-row items-center justify-start w-full hover:bg-slate-600 active:bg-slate-500 transition-colors duration-300',
@@ -33,7 +33,7 @@ const ProjectListItem = (root, controller, project) => {
       notice: 'w-5 h-5 flex flex-row justify-center items-center text-neutral-100 rounded-full z-30',
       noticeContainer: 'flex flex-row absolute top-0 left-0 -translate-x-1 -translate-y-3',
       self: 'flex flex-col items-center mb-4',
-      title: 'pl-4 grow text-left',
+      title: 'pl-4 lg:grow text-left',
     },
     mixins: {
       highPrioNotice: 'bg-red-600',

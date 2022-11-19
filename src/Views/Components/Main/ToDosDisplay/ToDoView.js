@@ -193,7 +193,7 @@ const ToDoView = (root, controller, toDo, project) => {
   const Subscriber = controller.subscriberWrapper({});
   const Publisher = controller.publisherWrapper({});
   const ProjectSubscriptions = [
-    // new Subscription(`projectEdited_${_projectID}`, _on_projectEdited);
+    new Subscription(`projectEdited_${_projectID}`, _on_projectEdited),
     new Subscription(`projectHidden_${_projectID}`, _on_projectHidden),
     new Subscription(`projectShown_${_projectID}`, _on_projectShown)
   ];
@@ -275,11 +275,10 @@ const ToDoView = (root, controller, toDo, project) => {
     const {toDo, project} = args;
     _update(toDo, project);
   }
-  // function _on_projectEdited(args){
+  function _on_projectEdited(args){
 
-  // }
+  }
   function _on_projectHidden(args){
-    console.log(`hit in toDoView`);
     _hide();
   }
   function _on_projectShown(args){

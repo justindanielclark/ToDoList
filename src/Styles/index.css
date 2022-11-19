@@ -6,16 +6,17 @@
   --secondary: #fafafa;
 }
 
-
-@media (min-resolution: 3dppx) {
-  :root{font-size: 24px;}
-}
-@media (min-resolution: 2dppx) {
-  :root{font-size: 20px;}
-}
 @media (min-resolution: 1dppx) {
   :root{font-size: 16px;}
 }
+@media (min-resolution: 2dppx) {
+  :root{font-size: 32px;}
+}
+@media (min-resolution: 3dppx) {
+  :root{font-size: 48px;}
+}
+
+
 * {
   scrollbar-width: .5rem;
   scrollbar-color: var(--secondary) var(--primary);
