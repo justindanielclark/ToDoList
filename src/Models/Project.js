@@ -23,6 +23,10 @@ class Project {
       high: 0,
     }
   }
+  adjustPriorities(lowered, raised){
+    this.#numPrios[lowered]--;
+    this.#numPrios[raised]++;
+  }
   addToDo(title, dueDate, priority, notes=[]){
     this.#numPrios[priority]++;
     const newToDo = new ToDo(title, dueDate, priority, this.#id, notes);

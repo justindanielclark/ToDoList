@@ -78,12 +78,12 @@ const App = (()=>{
     new Subscription('createToDo', createToDo),
     new Subscription('deleteToDo', deleteToDo),
     new Subscription('editToDo', editToDo),
-    //- new Subscription('getToDo', getToDo),
     new Subscription('createProject', createProject),
     new Subscription('deleteProject', deleteProject),
     new Subscription('editProject', editProject),
     new Subscription('getProject', getProject),
     new Subscription('getProjects', getProjects),
+    new Subscription('hideProject', hideProject)
   )
   function createProject(args){
     const {projectName, iconName, color} = args;
@@ -134,18 +134,30 @@ const App = (()=>{
       const oldProject = State.getProject(toDo.getProjectID())
       const newProject = State.getProject(projectID);
       oldProject.deleteToDo(toDo.getID());
+      updateToDoValues();
       newProject.transferToDo(toDo);
+      //Subscribers: ProjectListItem.js
       Controller.publish(`projectEdited_${toDo.getProjectID()}`, {project: oldProject});
       Controller.publish(`projectEdited_${projectID}`, {project: newProject});
-      project = newProject;
       toDo.setProjectID(project.getID());
+    } else {
+      if(priority !== toDo.getPriority()){
+        project.adjustPriorities(toDo.getPriority(), priority);
+      }
+      updateToDoValues();
+      //Subscribers: ProjectListItem.js
+      Controller.publish(`projectEdited_${toDo.getProjectID()}`, {project})
     }
-    toDo.setTitle(toDoName);
-    toDo.setDueDate(new Date(dueDate));
-    toDo.setPriority(priority);
-    toDo.setNotes(notes);
+
     //Subscribers: ToDoView.js
     Controller.publish(`toDoEdited_${toDo.getID()}`, {toDo, project});
+
+    function updateToDoValues(){
+      toDo.setTitle(toDoName);
+      toDo.setDueDate(new Date(dueDate));
+      toDo.setPriority(priority);
+      toDo.setNotes(notes);
+    }
   }
   function getProject(args){
     const {subscription, id} = args;
@@ -157,6 +169,9 @@ const App = (()=>{
     const projects = State.getProjects();
     Controller.publish(subscription, projects); //Subscriber: <Modal>NewToDoModal.js
     return projects;
+  }
+  function hideProject(args){
+    
   }
   //Initializing Some Data
   {
