@@ -10,7 +10,7 @@ const ToDosDisplay = (root, controller) => {
     }
   }
   //*Utility Variables
-  const _intervalTimer = 50;
+  const _intervalTimer = 100;
   const _toDisplayQueue = [];
   let _areToDosQueued = false;
 

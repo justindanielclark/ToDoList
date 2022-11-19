@@ -194,6 +194,7 @@ const ToDoView = (root, controller, toDo, project) => {
   const Subscriber = controller.subscriberWrapper({});
   const Publisher = controller.publisherWrapper({});
   const ProjectSubscriptions = [
+    new Subscription(`projectDeleted_${_projectID}`, _on_projectDeleted),
     new Subscription(`projectEdited_${_projectID}`, _on_projectEdited),
     new Subscription(`projectHidden_${_projectID}`, _on_projectHidden),
     new Subscription(`projectShown_${_projectID}`, _on_projectShown)
@@ -273,14 +274,18 @@ const ToDoView = (root, controller, toDo, project) => {
     editToDoModal(document.body, controller, toDo, project);
   }
   function _handleClick_DeleteButton(event){
-    _destroy();
+    _destroy(true);
   }
   function _on_toDoEdit(args){
     const {toDo, project} = args;
     _update(toDo, project);
   }
+  function _on_projectDeleted(args){
+    _destroy(false);
+  }
   function _on_projectEdited(args){
-
+    const {project} = args;
+    _update(toDo, project);
   }
   function _on_projectHidden(args){
     _hide();
@@ -294,7 +299,7 @@ const ToDoView = (root, controller, toDo, project) => {
   function _show(){
     _self.classList.add(_classes.animations.expandAndFadeIn);
   }
-  function _destroy(){
+  function _destroy(isFromToDoDeleteClick){
     Subscriber.unsubscribeAll();
     _self.removeEventListener('animationend', _handleAnimationEnd);
     _toDoViewControl_edit.removeEventListener('click', _handleClick_EditButton);
@@ -304,12 +309,16 @@ const ToDoView = (root, controller, toDo, project) => {
       _self.addEventListener('animationend', function(event){
         const {animationName} = event;
         if(animationName === 'contractAndFadeOut'){
-          Publisher.publish('deleteToDo', {toDoID: _toDoID, projectID: _projectID});
+          if(isFromToDoDeleteClick){
+            Publisher.publish('deleteToDo', {toDoID: _toDoID, projectID: _projectID});
+          }
           root.removeChild(_self);
         }
       }, {once: true})
     } else {
-      Publisher.publish('deleteToDo', {toDoID: _toDoID, projectID: _projectID});
+      if(isFromToDoDeleteClick){
+        Publisher.publish('deleteToDo', {toDoID: _toDoID, projectID: _projectID});
+      }
       root.removeChild(_self);
     }
     

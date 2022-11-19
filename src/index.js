@@ -119,7 +119,7 @@ const App = (()=>{
     const {toDoID, projectID} = args;
     const project = State.getProject(projectID)
     State.deleteToDo(toDoID, projectID)
-    //Subscribers: ProjectListItem
+    //Subscribers: toDoView.js
     Controller.publish(`toDoDeleted_${projectID}`, {project})
   }
   function editProject(args){
