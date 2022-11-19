@@ -5,7 +5,7 @@ const ProjectsCollection = (() => {
     const P = new Project(projectName, iconPath, color);
     const id = P.getID();
     _Projects.set(id, P);
-    return id;
+    return P;
   }
   function deleteProject(id){
     const P = _Projects.get(id);

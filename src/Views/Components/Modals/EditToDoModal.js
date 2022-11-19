@@ -1,6 +1,6 @@
 'use strict';
-import _classes from './_cssModal';
-const newToDoModal = (root, controller) => {
+import _classes from "./_cssModal";
+const newToDoModal = (root, controller, toDo, project) => {
   const Subscriber = controller.subscriberWrapper({});
   const Subscription = controller.Subscription;
   const Publisher = controller.publisherWrapper({});
@@ -12,8 +12,8 @@ const newToDoModal = (root, controller) => {
   )
   Publisher.publish('getProjects', {subscription: 'newToDoModal_getProjects'})
   //*Closure Utility Variables
-  let _chosenColor = projects[0].getColor();
-  let _checkedPriority = 'low';
+  let _chosenColor = project.getColor();
+  let _checkedPriority = toDo.getPriority();
   const _priorities = [
     {text: 'High', val: 'high', color: 'red'},
     {text: 'Medium', val: 'med', color: 'yellow'},
@@ -46,7 +46,7 @@ const newToDoModal = (root, controller) => {
     }
   //Title
   const _modalTitle = document.createElement('h1');
-    _modalTitle.innerText = 'Create New ToDo';
+    _modalTitle.innerText = `Edit ToDo: ${toDo.getTitle()}`;
     _modalTitle.className = _classes.base.modalTitle;
   //Project Input Group
   const _projectInputGroup = document.createElement('div');
@@ -63,11 +63,13 @@ const newToDoModal = (root, controller) => {
       const _projectInputGroupOption = document.createElement('option');
       _projectInputGroupOption.className = "transition-colors";
       _projectInputGroupOption.innerText = project.getName();
+      _projectInputGroupOption.value = project.getID();
       _projectInputGroupOption.dataset.project = project.getID()
       _projectInputGroupOption.dataset.color = project.getColor();
       _projectInputGroupSelect.append(_projectInputGroupOption);
       _projectInputGroupOptions.push(_projectInputGroupOption);
     })
+  _projectInputGroupSelect.value = project.getID();
   _projectInputGroupSelect.addEventListener('change', _handleChange_projectSelect);
   _projectInputGroup.append(_projectInputGroupLabel, _projectInputGroupSelect);
   //To Do Name Group
@@ -83,7 +85,7 @@ const newToDoModal = (root, controller) => {
     _nameInputGroupTextInput.name = 'toDoName';
     _nameInputGroupTextInput.maxLength = 20;
     _nameInputGroupTextInput.className = _classes.base.input;
-    _nameInputGroupTextInput.value = "";
+    _nameInputGroupTextInput.value = toDo.getTitle();
     _nameInputGroupTextInput.placeholder = "Enter a Todo Name";
   _nameInputGroup.append(_nameInputGroupLabel, _nameInputGroupTextInput);
   //Due Date Input Group
@@ -99,8 +101,7 @@ const newToDoModal = (root, controller) => {
     _dueDateInputGroupInput.type = 'date';
     _dueDateInputGroupInput.name = 'toDoDueDate';
     _dueDateInputGroupInput.className = _classes.base.input;
-    const today = new Date().toISOString().split("T")[0];
-    _dueDateInputGroupInput.value = today;
+    _dueDateInputGroupInput.value = toDo.getDueDate().toISOString().split("T")[0];;
   _dueDateInputGroup.append(_dueDateInputGroupLabel, _dueDateInputGroupInput);
   //Priority Input Group
   const _priorityInputGroup = document.createElement('div');
@@ -174,6 +175,16 @@ const newToDoModal = (root, controller) => {
   const _notesList = document.createElement('ul');
     _notesList.className = _classes.base.notesList;
     _notesList.id = 'newToDoModal_Notes_List';
+  toDo.getNotes().forEach(note=>{
+    const noteListItem = document.createElement('li');
+    if(_notesList.children.length % 2 === 0){
+      noteListItem.className =  [`bg-${_chosenColor}-300`, _classes.base.note].join(' ');
+    } else {
+      noteListItem.className = [`bg-${_chosenColor}-200`, _classes.base.note].join(' ');
+    }
+    noteListItem.innerText = note;
+    _notesList.append(noteListItem);
+  })
   _notesContainer.append(_notesList, _notesTextArea, _notesContainerControls);
   _notesInputGroup.append(_notesInputGroupLabel, _notesContainer);
   //Control Input Group
@@ -191,8 +202,10 @@ const newToDoModal = (root, controller) => {
     _controlsInputGroupAcceptButton.className = [_classes.base.button, _classes.mixins.accept].join(' ');
     _controlsInputGroupAcceptButton.addEventListener('click', _handleClick_AcceptButton);
   _controlsInputGroup.append(_controlsInputGroupCancelButton, _controlsInputGroupAcceptButton);
+  //DOM Creation
   _modalForm.append(_modalTitle, _projectInputGroup, _nameInputGroup, _dueDateInputGroup, _priorityInputGroup, _notesInputGroup, _controlsInputGroup);
   _modal.append(_modalScreen, _modalForm)
+  //*Color Management
   const _DarkColoredElements = [
     _projectInputGroup,
     _projectInputGroupLabel,
@@ -218,30 +231,17 @@ const newToDoModal = (root, controller) => {
     _notesTextArea
   ];
   _setModalColors(_chosenColor, _chosenColor);
+  //*Cleanup Animation Classes After Animation Completion
   _modalScreen.addEventListener('animationend', _handleAnimationEnd_ModalScreen_FadeIn, {once: true});
   _modalForm.addEventListener('animationend', _handleAnimationEnd_ModalForm_SlideIn, {once: true});
+  //*Prepend Modal
   root.prepend(_modal);
-  //*Closure Functions
+
   function _setModalColors(oldColor, newColor){
     const oldTextAreaTextClass = `text-${oldColor}-900`;
     const newTextAreaTextClass = `text-${newColor}-900`;
-    const oldNoteLightClass = `bg-${oldColor}-200`;
-    const oldNoteDarkClass = `bg-${oldColor}-300`;
-    const newNoteLightClass = `bg-${newColor}-200`;
-    const newNoteDarkClass = `bg-${newColor}-300`;
-
     _notesTextArea.classList.remove(oldTextAreaTextClass);
     _notesTextArea.classList.add(newTextAreaTextClass);
-    Array.from(_notesList.children).forEach(note=>{
-      if(note.classList.contains(oldNoteLightClass)){
-        note.classList.remove(oldNoteLightClass);
-        note.classList.add(newNoteLightClass);
-      }
-      else {
-        note.classList.remove(oldNoteDarkClass);
-        note.classList.add(newNoteDarkClass);
-      }
-    })
 
     _DarkColoredElements.forEach(element => {
       setElementBackgroundColor(element, oldColor, newColor, 900);
@@ -284,7 +284,7 @@ const newToDoModal = (root, controller) => {
       //TODO
       console.log('Not Today Zerg!');
     } else {
-      Publisher.publish('createToDo', {projectID, toDoName, dueDate, priority, notes});
+      Publisher.publish(`editToDo`, {toDo, projectID, toDoName, dueDate, priority, notes});
       _destroy();
     }
   }
@@ -292,11 +292,6 @@ const newToDoModal = (root, controller) => {
     const text = _notesTextArea.value;
     if(text !== ""){
       const noteListItem = document.createElement('li');
-      if(_notesList.children.length % 2 === 0){
-        noteListItem.className =  [`bg-${_chosenColor}-300`, _classes.base.note].join(' ');
-      } else {
-        noteListItem.className = [`bg-${_chosenColor}-200`, _classes.base.note].join(' ');
-      }
       noteListItem.innerText = _notesTextArea.value;
       _notesTextArea.value = "";
       _notesList.append(noteListItem);
@@ -319,6 +314,7 @@ const newToDoModal = (root, controller) => {
     _chosenColor = newColor;
   }
   function _destroy(){
+    //Remove all remaining event listeners (animations ones are removed after once playthrough)
     _projectInputGroupSelect.removeEventListener('change', _handleChange_projectSelect);
     _addNoteButton.removeEventListener('click', _handleClick_addNoteButton);
     _removeNoteButton.removeEventListener('click', _handleClick_removeNoteButton);
@@ -327,7 +323,9 @@ const newToDoModal = (root, controller) => {
     _radioButtons.forEach(radio=>{
       radio.removeEventListener('click', _handleClick_PriorityRadio);
     })
+    //Remove all subscriptions
     Subscriber.unsubscribeAll();
+    //Trigger Leaving Animation, Modal removes itself from the DOM upon completion of Animation
     _modalScreen.classList.add(_classes.animations.fadeOut);
     switch(Math.floor(Math.random()*4)){
       case 0: {
@@ -355,4 +353,5 @@ const newToDoModal = (root, controller) => {
     }, {once: true})
   }
 }
+
 export default newToDoModal;

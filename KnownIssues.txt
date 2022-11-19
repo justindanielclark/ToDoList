@@ -1,0 +1,5 @@
+1.) No Feedback on Bad Data for Either NewProjectModal or NewToDoModal
+2.) Chrome Input Overwrite on Autofill
+3.) ToDo Modal TextArea breaks on Too Long a Char
+4.) When selecting a low icon in the IconContainer in NewProjectModal, can cause layout issues.
+5.) MaxH on ViewToDo interaction with NotesContainer Scroll on overflow

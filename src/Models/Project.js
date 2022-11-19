@@ -4,17 +4,19 @@ import { v4 } from "uuid";
 
 class Project {
   #projectName;
-  #iconPath;
+  #iconName;
   #ToDos;
   #id;
   #color;
   #numPrios;
-  constructor(projectName, iconPath, color){
+  #showing;
+  constructor(projectName, iconName, color){
     this.#projectName = projectName;
     this.#ToDos = new Map();
-    this.#iconPath = iconPath;
+    this.#iconName = iconName;
     this.#id = v4();
     this.#color = color;
+    this.#showing = true;
     this.#numPrios = {
       low: 0,
       med: 0,
@@ -39,8 +41,8 @@ class Project {
   getColor(){
     return this.#color;
   }
-  getIconPath(){
-    return this.#iconPath;
+  getIconName(){
+    return this.#iconName;
   }
   getID(){
     return this.#id;
@@ -54,17 +56,38 @@ class Project {
   getNumPrios(){
     return this.#numPrios;
   }
+  getShowing(){
+    return this.#showing;
+  }
+  setColor(value){
+    this.#color = value;
+    return this.#color;
+  }
+  setIconName(value){
+    this.#iconName = value;
+    return this.#iconName;
+  }
   setName(value){
     this.#projectName = value;
     return this.#projectName;
   }
+  setShowing(value){
+    this.#showing = value;
+    return this.#showing;
+  }
   toString(){
     const message = `projectName: ${this.#projectName},\n
-    iconPath: ${this.#iconPath},\n
+    iconName: ${this.#iconName},\n
     ToDos: ${this.#ToDos},\n
     id: ${this.#id},\n
-    color: ${this.#color},\n`
+    color: ${this.#color},\n
+    showing: ${this.#showing},\n`
     return message;
+  }
+  transferToDo(toDo){
+    this.#numPrios[toDo.getPriority()]++;
+    this.#ToDos.set(toDo.getID(), toDo);
+    return toDo;
   }
 }
 

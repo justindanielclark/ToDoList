@@ -82,20 +82,50 @@ module.exports = {
   theme: {
     extend: {
       animation: {
+        appearFromBelow: 'appearFromBelow 1s ease-in-out',
+        contractAndFadeOut: 'contractAndFadeOut .5s ease-in-out',
+        disappearBelow: 'disappearBelow 1s ease-in-out',
+        expandAndFadeIn: 'expandAndFadeIn .5s ease-in-out',
+        expandAndSlideIn: 'expandAndSlideIn .6s ease-in-out',
         fadeIn: 'fadeIn .5s linear',
         fadeOut: 'fadeOut .5s linear',
-        heightContract: 'heightContract .15s linear',
-        heightExpand: 'heightExpand .15s linear',
+        heightContract: 'heightContract .25s ease-in-out',
+        heightExpand: 'heightExpand .25s ease-in-out',
         slideInTop: 'slideInTop .5s ease-in-out',
         slideInRight: 'slideInRight .5s ease-in-out',
         slideInBottom: 'slideInBottom .5s ease-in-out',
         slideInLeft: 'slideInLeft .5s ease-in-out',
+        slideOutAndContract: 'slideOutAndContract .6s ease-in-out',
         slideOutTop: 'slideOutTop .5s ease-in-out',
         slideOutRight: 'slideOutRight .5s ease-in-out',
         slideOutBottom: 'slideOutBottom .5s ease-in-out',
         slideOutLeft: 'slideOutLeft .5s ease-in-out',
       },
       keyframes: {
+        appearFromBelow: {
+          '0%': {transform: 'translateY(300%)'},
+          '50%': {transform: 'translateY(300%)'},
+          '100%': {transform: 'translateY(0%)'}
+        },
+        contractAndFadeOut: {
+          '0%': {opacity: '1', maxHeight: '16rem', marginBottom: '1rem', paddingTop: '1rem'},
+          '100%': {opacity: '0', maxHeight: '0rem', marginBottom: '0rem', paddingTop: '0rem'},
+        },
+        disappearBelow: {
+          '0%': {transform: 'translateY(0%)'},
+          '50%': {transform: 'translateY(0%)'},
+          '55%': {transform: 'translateY(-15%)'},
+          '100%': {transform: 'translateY(300%)'}
+        },
+        expandAndSlideIn: {
+          '0%': {transform: 'translateX(-150%)', maxHeight: '0px', marginBottom: '0rem'},
+          '50%': {transform: 'translateX(-150%)', maxHeight: '90px', marginBottom: '1rem'},
+          '100%': {transform: 'translateX(0%)', maxHeight: '90px', marginBottom: '1rem'},
+        },
+        expandAndFadeIn: {
+          '0%': {opacity: '0', maxHeight: '0rem', marginBottom: '0rem', paddingTop: '0rem'},
+          '100%': {opacity: '1', maxHeight: '16rem', marginBottom: '1rem', paddingTop: '1rem'},
+        },
         fadeIn: {
           '0%': {opacity: '0'},
           '100%': {opacity: '1'}
@@ -105,12 +135,12 @@ module.exports = {
           '100%': {opacity: '0'}
         },
         heightContract: {
-          '0%': {maxHeight: '100px'},
+          '0%': {maxHeight: '70px'},
           '100%': {maxHeight: '0'}
         },
         heightExpand: {
           '0%': {maxHeight: '0'},
-          '100%': {maxHeight: '100px'}
+          '100%': {maxHeight: '70px'}
         },
         slideInLeft: {
           '0%': {transform: 'translateX(400%)', opacity: '0'},
@@ -127,6 +157,11 @@ module.exports = {
         slideInBottom: {
           '0%': {transform: 'translateY(400%)', opacity: '0'},
           '100%': {transform: 'translateY(0%)', opacity: '1'}
+        },
+        slideOutAndContract: {
+          '0%': {transform: 'translateX(0%)', maxHeight: '90px', marginBottom: '1rem'},
+          '50%': {transform: 'translateX(-150%)', maxHeight: '90px', marginBottom: '1rem'},
+          '100%': {transform: 'translateX(-150%)', maxHeight: '0px', marginBottom: '0rem'}
         },
         slideOutLeft: {
           '0%': {transform: 'translateX(0%)', opacity: '1'},

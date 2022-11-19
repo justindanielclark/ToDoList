@@ -23,19 +23,39 @@ class ToDo {
   getDueDate(){
     return this.#dueDate;
   }
+  setDueDate(value){
+    this.#dueDate = value;
+    return this.#dueDate
+  }
   getID(){
     return this.#id;
   }
   getNotes(){
     return this.#notes;
   }
+  setNotes(value){
+    this.#notes = value;
+    return this.#notes;
+  }
   getPriority(){
+    return this.#priority;
+  }
+  setPriority(value){
+    this.#priority = value;
     return this.#priority;
   }
   getProjectID(){
     return this.#projectID;
   }
+  setProjectID(id){
+    this.#projectID = id;
+    return this.#projectID;
+  }
   getTitle(){
+    return this.#title;
+  }
+  setTitle(value){
+    this.#title = value;
     return this.#title;
   }
   removeNote(index){

@@ -1,83 +1,58 @@
-const ProjectsDisplay = (root, controller) => {  
-  // passed on every update() call
-  /**@type {Map} */
-  let _projects; 
-  
-  //Styling Declarations (allows tailwind to discover classes)
-  const classes = {
+import ProjectListItem from "./ProjectListItem";
+
+const ProjectsDisplay = (root, controller) => { 
+  const Subscriber = controller.subscriberWrapper({});
+  const Subscription = controller.Subscription;
+  Subscriber.subscribe(
+    new Subscription('projectCreated', _onProjectCreate)
+  )
+  //*CSS Tailwind Declarations
+  const _classes = {
     base: {
-      self: 'bg-slate-700 text-slate-100 flex flex-col w-64',
+      self: 'bg-slate-700 text-slate-100 flex flex-col sm:w-64 overflow-y-auto',
       title: 'text-2xl p-4 text-neutral-100',
-      projectsList: 'p-4',
+      projectsList: 'p-4 flex flex-col',
       noCurrentProjectsNotice: 'px-2 text-center'
     },
-    mixins: {}
   }
-  //Create Nodes At Top Level For Access to Rest of Closure
+  //*Utility Closure Variables
+  const _listItems = [];
+  const _intervalTimer = 150;
+  let toDisplayQueue = [];
+  let areProjectsQueued = false;
+
+  //*DOM Creation
   const _self = document.createElement('aside');
-    _self.className = classes.base.self;
+    _self.className = _classes.base.self;
   const _title = document.createElement('h1');
     _title.innerText = 'Projects:';
-    _title.className = classes.base.title;
+    _title.className = _classes.base.title;
   const _projectList = document.createElement('ul');
-    _projectList.className = classes.base.projectsList;
+    _projectList.className = _classes.base.projectsList;
   const _noCurrentProjectsNotice = document.createElement('p')
-    _noCurrentProjectsNotice.className = classes.base.noCurrentProjectsNotice;
-  let isDisplayed_noCurrentProjectsNotice = false;
-
+    _noCurrentProjectsNotice.className = _classes.base.noCurrentProjectsNotice;
+    _noCurrentProjectsNotice.innerText = '<No Projects To Display>';
+  _projectList.append(_noCurrentProjectsNotice);
   _self.append(_title, _projectList);
-  
-  /**
-   * Generates Aside Element and Appends to Root. Requires supply of Root Element, The App SubPub Controller, and All App Level Handlers for Passing Data
-   * @param {HTMLElement} root 
-   * @param {SubscriberPublisherController} controller 
-   * @param {Object} handlers 
-   * @returns {HTMLElement}
-   */
-  function create(){
-    root.appendChild(_self);
-    return _self;
-  }
-  /**
-   * Updates Aside Element And All Associated Children To Match Existing Projects/ToDos
-   * @param {Map} projects
-   */
-  function update(projects){
-    _projects = projects;
-    //If no projects, remove all remaining LIs from the _projectList and append _noCurrentProjectsNotice to the aside
-    if (_projects.size === 0){
-      while(_projectList.lastChild){
-        _projectList.removeChild(_projectList.lastChild);
-      }
-      if(!isDisplayed_noCurrentProjectsNotice){
-        isDisplayed_noCurrentProjectsNotice = true;
-        _self.appendChild(_noCurrentProjectsNotice);
-      }
+  root.append(_self);
+  function _onProjectCreate(args){
+    const {project, projects} = args;
+    if(_projectList.contains(_noCurrentProjectsNotice)){
+      _projectList.removeChild(_noCurrentProjectsNotice);
     }
-    //If there are projects:
-    // 1.) Remove _noCurrentProjectsNotice if displayed
-    // 2.) If there are more projects than project LIs, create LIs until they are =
-    // 3.) If there are less projects than project LIs, first remove all the projects who don't have an ID discoverable in _projects
-    else {
-      // 1.)
-      if(isDisplayed_noCurrentProjectsNotice){
-        isDisplayed_noCurrentProjectsNotice = false;
-        _self.removeChild(_noCurrentProjectsNotice);
-      }
-      if(_projects.size > _projectListLIs.size){
-        const diff = _projects.size - _projectListLIs.size;
-        for(let i = 0; i < diff; i++){
-          //todo create LI's until diff = 0
+    toDisplayQueue.push(project);
+    if(!areProjectsQueued){
+      areProjectsQueued = true;
+      const interval = setInterval(function(){
+        if(toDisplayQueue.length === 0){
+          clearInterval(interval);
+          areProjectsQueued = false;
+        } else {
+          const p = toDisplayQueue.splice(0,1);
+          _listItems.push(ProjectListItem(_projectList, controller, p[0]));
         }
-      }
-      if(_projects.size < _projectListLIs.size){
-        //todo remove LI's that don't have a matching id
-      }
+      }, _intervalTimer);
     }
-  }
-  return {
-    create,
-    update,
   }
 }
 
