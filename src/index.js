@@ -1,11 +1,11 @@
 'use strict';
 import './Styles/index.css';
-import ProjectsCollection from './Models/ProjectsCollection.js';
+import ToDo from './Models/ToDo';
+import Project from './Models/Project';
 import Header from './Views/Components/Header/Header';
 import Main from './Views/Components/Main/Main';
 import Footer from './Views/Components/Footer/Footer';
 import SubscriberPublisherController from './Utilities/SubscriberPublisherController.js';
-import IconMap from './Assets/IconMap.js';
 
 const App = (()=>{
   const Controller = SubscriberPublisherController();
@@ -13,49 +13,50 @@ const App = (()=>{
   const Subscriber = Controller.subscriberWrapper({});
 
   const State = (() => {
-    const {createProject, deleteProject, getProject, getProjects} = ProjectsCollection;
-    function createToDo(projectID, title, dueDate, priority, notes = []){
-      const project = getProject(projectID);
-      const toDo = project.addToDo(title, dueDate, priority, notes);
-      return toDo;
+    const _toDos = new Map();
+    const _projects = new Map();
+
+    function createProject(projectName, iconPath, color){
+      const P = new Project(projectName, iconPath, color);
+      const id = P.getID();
+      _projects.set(id, P);
+      return P;
     }
-    function deleteToDo(id, projectID = null){
-      if(projectID){
-        console.log('hit');
-        const project = getProject(projectID);
-        return project.deleteToDo(id);
-      }
-      else {
-        const projects = getProjects();
-        const projectsArray = Array.from(Object.values(projects));
-        let toDo;
-        for(let i = 0; i < projectsArray.length; i++){
-          toDo = projectsArray[i].getToDo(id);
-          if(toDo){
-            projectsArray[i].deleteToDo(id);
-            break
-          }
-        }
-        return toDo; 
-      }
+    function deleteProject(id){
+      const P = _projects.get(id);
+      _projects.delete(id);
+      return P;
     }
-    function getToDo(id, projectID = null){
-      let toDo = null;
-      if(projectID){
-        toDo = getProject(projectID).getToDo(id);
-      } else {
-        const projects = getProjects();
-        for(const project of projects){
-          toDo = project.getToDo(id);
-          if(toDo !== undefined){
-            break;
-          }
-        }
+    function getProject(id){
+      return _projects.get(id);
+    }
+    function getProjects(){
+      return _projects;
+    }
+    function createToDo(projectID, title, dueDate, priority, notes = []){ //Suspect
+      const p = getProject(projectID);
+      const td = new ToDo(title, dueDate, priority, projectID, notes);
+      _toDos.set(td.getID(), td);
+      p.raisePriority(priority);
+      return td;
+    }
+    function deleteToDo(id, projectID){
+      const p = getProject(projectID);
+      const td = getToDo(id);
+      _toDos.delete(id);
+      p.lowerPriority(td.getPriority())
+      return td;
+    }
+    function getToDo(id){
+      const td = _toDos.get(id);
+      return td;
+    }
+    function getAllToDos(){
+      const tdArray = [];
+      for(const td of _toDos){
+        tdArray.push(td[1])
       }
-      if(toDo === undefined){
-        toDo = null;
-      }
-      return toDo;
+      return tdArray;
     }
     return {
       createProject,
@@ -65,6 +66,7 @@ const App = (()=>{
       createToDo,
       deleteToDo,
       getToDo,
+      getAllToDos,
     }
   })()
   const View = (()=>{
