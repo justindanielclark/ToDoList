@@ -82,6 +82,7 @@ const ProjectListItem = (root, controller, project) => {
   const _self = document.createElement('li');
     _self.className = [_classes.base.self, _classes.animations.expandAndSlideIn].join(' ');
     _self.addEventListener('animationend', _handleAnimationEnd_self);
+    _self.dataset.id = _id;
     //self -> topContainer
     const _topContainer = document.createElement('div');
       _topContainer.className = _classes.base.topContainer;
@@ -90,6 +91,7 @@ const ProjectListItem = (root, controller, project) => {
         _orderContainer.className = _classes.base.orderContainer;
         const _moveOrderUpButton = document.createElement('button');
         _moveOrderUpButton.className = _classes.base.orderButton;
+        _moveOrderUpButton.addEventListener('click', _handleClick_moveProjectUpButton);
           const _moveOrderUpButtonImg = document.createElement('img');
           _moveOrderUpButtonImg.className = _classes.base.orderButtonImg;
           _moveOrderUpButtonImg.src = up;
@@ -99,6 +101,7 @@ const ProjectListItem = (root, controller, project) => {
         _orderContainerFlexFiller.className = _classes.base.orderContainerFlexFill;
         const _moveOrderDownButton = document.createElement('button');
         _moveOrderDownButton.className = _classes.base.orderButton;
+        _moveOrderDownButton.addEventListener('click', _handleClick_moveProjectDownButton);
           const _moveOrderDownButtonImg = document.createElement('img');
           _moveOrderDownButtonImg.className = _classes.base.orderButtonImg;
           _moveOrderDownButtonImg.src = down;
@@ -195,23 +198,6 @@ const ProjectListItem = (root, controller, project) => {
       _bottomContainer.classList.add(_classes.mixins.maxHeightZero, _classes.mixins.hidden);
     }
   }
-  function _handleClick_editProject(e){
-    EditProjectModal(document.body, controller, project);
-  }
-  function _handleClick_expandContractButton(e){
-    if(_isContracted_bottomContainer){
-      _isContracted_bottomContainer = false;
-      _expandContractButton.innerText = '-';
-      _bottomContainer.classList.remove(_classes.mixins.maxHeightZero, _classes.mixins.hidden);
-      _bottomContainer.classList.add(_classes.animations.heightExpand);
-    }
-    if(_isExpanded_bottomContainer){
-      _isExpanded_bottomContainer = false;
-      _expandContractButton.innerText = '+';
-      _bottomContainer.classList.remove(_classes.mixins.maxHeightAuto);
-      _bottomContainer.classList.add(_classes.animations.heightContract);
-    }
-  }
   function _handleClick_deleteProject(e){
     if(_isExpanded_bottomContainer){
       _isExpanded_bottomContainer = false;
@@ -230,6 +216,46 @@ const ProjectListItem = (root, controller, project) => {
     Publisher.publish('deleteProject', {id: _id});
     function _slideOutAndContract(){
       _self.classList.add(_classes.animations.slideOutAndContract)
+    }
+  }
+  function _handleClick_editProject(e){
+    EditProjectModal(document.body, controller, project);
+  }
+  function _handleClick_expandContractButton(e){
+    if(_isContracted_bottomContainer){
+      _isContracted_bottomContainer = false;
+      _expandContractButton.innerText = '-';
+      _bottomContainer.classList.remove(_classes.mixins.maxHeightZero, _classes.mixins.hidden);
+      _bottomContainer.classList.add(_classes.animations.heightExpand);
+    }
+    if(_isExpanded_bottomContainer){
+      _isExpanded_bottomContainer = false;
+      _expandContractButton.innerText = '+';
+      _bottomContainer.classList.remove(_classes.mixins.maxHeightAuto);
+      _bottomContainer.classList.add(_classes.animations.heightContract);
+    }
+  }
+  function _handleClick_moveProjectUpButton(e){
+    const projectOrder = project.getOrder();
+    if(projectOrder !== 0){
+      const projectIDToRaise = _self.parentElement.children[projectOrder-1].dataset.id;
+      _self.parentElement.children[projectOrder-1].before(_self)
+      Publisher.publish('reorderProjects', {loweredOrderProjectID: _id, raisedOrderProjectID: projectIDToRaise});
+    }
+  }
+  function _handleClick_moveProjectDownButton(e){
+    const projectOrder = project.getOrder();
+    let projects;
+    let moveProjectDownSubscription = new Subscription(`ProjectListItem_GetProjects_${_id}`, function(returnedProjects){
+      projects = returnedProjects;
+    })
+    Subscriber.subscribe(moveProjectDownSubscription);
+    Publisher.publish('getProjects', {subscription: `ProjectListItem_GetProjects_${_id}`});
+    Subscriber.unsubscribe(moveProjectDownSubscription);
+    if(projectOrder !== projects.size-1){
+      const projectIDToLower  = _self.parentElement.children[projectOrder+1].dataset.id;
+      _self.parentElement.children[projectOrder+1].after(_self);
+      Publisher.publish('reorderProjects', {loweredOrderProjectID: projectIDToLower, raisedOrderProjectID: _id});
     }
   }
   function _handleClick_toDisplayCheckBox(e){
@@ -260,10 +286,9 @@ const ProjectListItem = (root, controller, project) => {
     _projectIMG.src = projectIconPath;
     _projectIMG.alt = `${projectName} icon`;
     _title.innerText = projectName;
-    _on_PrioNoticesUpdated({project});
+    _updatePrioNotices(project);
   }
-  function _on_PrioNoticesUpdated(args){
-    const {project} = args;
+  function _updatePrioNotices(project){
     const projectNumPrios = project.getNumPrios();
     if(projectNumPrios.high > 0){
       _noticeHighPrio.classList.remove(_classes.mixins.hidden);
@@ -289,7 +314,9 @@ const ProjectListItem = (root, controller, project) => {
       _noticeLowPrio.classList.add(_classes.mixins.hidden);
       _noticeLowPrio.innerText = projectNumPrios.low;
     }
-
+  }
+  function _on_PrioNoticesUpdated(args){
+    _updatePrioNotices(args.project)
   }
 }
 export default ProjectListItem;

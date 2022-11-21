@@ -26,11 +26,9 @@ class Project {
     this.#numPrios[lowered]--;
     this.#numPrios[raised]++;
   }
-  raisePriority(priority){
-    this.#numPrios[priority]++;
-  }
-  lowerPriority(priority){
-    this.#numPrios[priority]--;
+  decrementOrder(){
+    this.#order--;
+    return this.#order;
   }
   getColor(){
     return this.#color;
@@ -52,6 +50,16 @@ class Project {
   }
   getShowing(){
     return this.#showing;
+  }
+  incrementOrder(){
+    this.#order++;
+    return this.#order;
+  }
+  lowerPriority(priority){
+    this.#numPrios[priority]--;
+  }
+  raisePriority(priority){
+    this.#numPrios[priority]++;
   }
   setColor(value){
     this.#color = value;

@@ -83,6 +83,7 @@ const App = (()=>{
     new Subscription('getProjects', getProjects),
     new Subscription('hideProject', hideProject),
     new Subscription('showProject', showProject),
+    new Subscription('reorderProjects', reorderProjects),
   )
   function createProject(args){
     const {projectName, iconName, color} = args;
@@ -192,6 +193,13 @@ const App = (()=>{
     project.setShowing(false);
     //Subscribers: ToDoView.js
     Controller.publish(`projectHidden_${projectID}`, null)
+  }
+  function reorderProjects(args){
+    const {loweredOrderProjectID, raisedOrderProjectID} = args;
+    const raisedProject = State.getProject(raisedOrderProjectID);
+    const loweredProject = State.getProject(loweredOrderProjectID);
+    raisedProject.incrementOrder();
+    loweredProject.decrementOrder();
   }
   function showProject(args){
     const {projectID} = args;
