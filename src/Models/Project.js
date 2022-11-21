@@ -8,12 +8,14 @@ class Project {
   #color;
   #numPrios;
   #showing;
-  constructor(projectName, iconName, color){
+  #order;
+  constructor(projectName, iconName, color, order){
     this.#projectName = projectName;
     this.#iconName = iconName;
     this.#id = v4();
     this.#color = color;
     this.#showing = true;
+    this.#order = order;
     this.#numPrios = {
       low: 0,
       med: 0,
@@ -44,6 +46,9 @@ class Project {
   }
   getNumPrios(){
     return this.#numPrios;
+  }
+  getOrder(){
+    return this.#order;
   }
   getShowing(){
     return this.#showing;

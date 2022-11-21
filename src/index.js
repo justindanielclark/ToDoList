@@ -15,9 +15,8 @@ const App = (()=>{
   const State = (() => {
     const _toDos = new Map();
     const _projects = new Map();
-
-    function createProject(projectName, iconPath, color){
-      const P = new Project(projectName, iconPath, color);
+    function createProject(projectName, iconPath, color, order){
+      const P = new Project(projectName, iconPath, color, order);
       const id = P.getID();
       _projects.set(id, P);
       return P;
@@ -51,12 +50,8 @@ const App = (()=>{
       const td = _toDos.get(id);
       return td;
     }
-    function getAllToDos(){
-      const tdArray = [];
-      for(const td of _toDos){
-        tdArray.push(td[1])
-      }
-      return tdArray;
+    function getToDos(){
+      return _toDos;
     }
     return {
       createProject,
@@ -66,7 +61,7 @@ const App = (()=>{
       createToDo,
       deleteToDo,
       getToDo,
-      getAllToDos,
+      getToDos,
     }
   })()
   const View = (()=>{
@@ -91,8 +86,8 @@ const App = (()=>{
   )
   function createProject(args){
     const {projectName, iconName, color} = args;
-    const project = State.createProject(projectName, iconName, color);
     const projects = State.getProjects();
+    const project = State.createProject(projectName, iconName, color, projects.size);
     //Subscribers: Header.js, ProjectsDisplay.js
     Controller.publish('projectCreated', {project, projects}); 
     return project;
@@ -107,22 +102,40 @@ const App = (()=>{
     Controller.publish(`toDoCreated_${projectID}`, {toDo, project}); 
     return toDo;
   }
-  function deleteProject(args){
+  function deleteProject(args){ //WORKING ON FIXING THIS
     const {id} = args;
     const project = State.deleteProject(id);
     const projects = State.getProjects();
+    const toDos = State.getToDos();
+    const toDosToDelete = [];
     //Subscribers: Header.js, ProjectDisplay.js
     Controller.publish('projectDeleted', {project, projects})
-    //Subscribers: toDoView.js
-    Controller.publish(`projectDeleted_${id}`, {});
-    return project;
+    for(let toDo of toDos.values()){
+      if(toDo.getProjectID() === id){
+        toDos.delete(toDo.getID());
+        toDosToDelete.push(toDo);
+        //Subscriber: toDoView.js
+        Controller.publish(`toDoDisabled_${toDo.getID()}`);
+      }
+    }
+    const interval = setInterval(function(){
+      if(toDosToDelete.length > 0){
+        const toDo = toDosToDelete.pop();
+        console.log(toDo);
+        Controller.publish(`toDoDeleted_${toDo.getID()}`)
+      } else {
+        clearInterval(interval);
+      }
+    }, 150);
   }
   function deleteToDo(args){
     const {toDoID, projectID} = args;
     const project = State.getProject(projectID)
-    State.deleteToDo(toDoID, projectID)
-    //Subscribers: toDoView.js
-    Controller.publish(`toDoDeleted_${projectID}`, {project})
+    State.deleteToDo(toDoID, projectID);
+    //Subscribers: ToDoView.js
+    Controller.publish(`toDoDeleted_${toDoID}`, {})
+    //Subscribers: ProjectListItem.js
+    Controller.publish(`projectEdited_updatePrioNotices_${projectID}`, {project})
   }
   function editProject(args){
     const {projectID, projectName, iconName, color} = args;
@@ -139,9 +152,9 @@ const App = (()=>{
     if(projectID !== toDo.getProjectID()){
       const oldProject = State.getProject(toDo.getProjectID())
       const newProject = State.getProject(projectID);
-      oldProject.deleteToDo(toDo.getID());
+      oldProject.lowerPriority(toDo.getPriority());
       updateToDoValues();
-      newProject.transferToDo(toDo);
+      newProject.raisePriority(toDo.getPriority());
       //Subscribers: ProjectListItem.js
       Controller.publish(`projectEdited_updatePrioNotices_${toDo.getProjectID()}`, {project: oldProject});
       Controller.publish(`projectEdited_updatePrioNotices_${projectID}`, {project: newProject});
@@ -149,10 +162,10 @@ const App = (()=>{
     } else {
       if(priority !== toDo.getPriority()){
         project.adjustPriorities(toDo.getPriority(), priority);
+        //Subscribers: ProjectListItem.js
+        Controller.publish(`projectEdited_updatePrioNotices_${toDo.getProjectID()}`, {project})
       }
       updateToDoValues();
-      //Subscribers: ProjectListItem.js
-      Controller.publish(`projectEdited_updatePrioNotices_${toDo.getProjectID()}`, {project})
     }
     //Subscribers: ToDoView.js
     Controller.publish(`toDoEdited_${toDo.getID()}`, {toDo, project});

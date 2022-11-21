@@ -83,9 +83,9 @@ module.exports = {
     extend: {
       animation: {
         appearFromBelow: 'appearFromBelow 1s ease-in-out',
-        contractAndFadeOut: 'contractAndFadeOut .1s ease-in-out',
+        contractAndFadeOut: 'contractAndFadeOut .3s ease-in-out',
         disappearBelow: 'disappearBelow 1s ease-in-out',
-        expandAndFadeIn: 'expandAndFadeIn .1s ease-in-out',
+        expandAndFadeIn: 'expandAndFadeIn .3s ease-in-out',
         expandAndSlideIn: 'expandAndSlideIn .6s ease-in-out',
         fadeIn: 'fadeIn .5s linear',
         fadeOut: 'fadeOut .5s linear',

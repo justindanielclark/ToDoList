@@ -194,13 +194,17 @@ const ToDoView = (root, controller, toDo, project) => {
   const Subscriber = controller.subscriberWrapper({});
   const Publisher = controller.publisherWrapper({});
   const ProjectSubscriptions = [
-    new Subscription(`projectDeleted_${_projectID}`, _on_projectDeleted),
     new Subscription(`projectEdited_${_projectID}`, _on_projectEdited),
     new Subscription(`projectHidden_${_projectID}`, _on_projectHidden),
     new Subscription(`projectShown_${_projectID}`, _on_projectShown)
   ];
-  Subscriber.subscribe(
+  const ToDoSubscriptions = [
+    new Subscription(`toDoDeleted_${_toDoID}`, _on_toDoDeleted),
     new Subscription(`toDoEdited_${_toDoID}`, _on_toDoEdit),
+    new Subscription(`toDoDisabled_${_toDoID}`, _on_toDoDisabled),
+  ];
+  Subscriber.subscribe(
+    ...ToDoSubscriptions,
     ...ProjectSubscriptions,
   )
   //*DOM Creation
@@ -274,24 +278,8 @@ const ToDoView = (root, controller, toDo, project) => {
     editToDoModal(document.body, controller, toDo, project);
   }
   function _handleClick_DeleteButton(event){
-    _destroy(true);
-  }
-  function _on_toDoEdit(args){
-    const {toDo, project} = args;
-    while(ProjectSubscriptions.length > 0){
-      Subscriber.unsubscribe(ProjectSubscriptions.pop());
-    }
-    ProjectSubscriptions.push(
-      new Subscription(`projectDeleted_${project.getID()}`, _on_projectDeleted),
-      new Subscription(`projectEdited_${project.getID()}`, _on_projectEdited),
-      new Subscription(`projectHidden_${project.getID()}`, _on_projectHidden),
-      new Subscription(`projectShown_${project.getID()}`, _on_projectShown)
-    )
-    Subscriber.subscribe(...ProjectSubscriptions);
-    _update(toDo, project);
-  }
-  function _on_projectDeleted(args){
-    _destroy(false);
+    _disable();
+    Publisher.publish('deleteToDo', {toDoID: _toDoID, projectID: _projectID})
   }
   function _on_projectEdited(args){
     const {project} = args;
@@ -303,35 +291,50 @@ const ToDoView = (root, controller, toDo, project) => {
   function _on_projectShown(args){
     _show();
   }
+  function _on_toDoEdit(args){
+    const {toDo, project} = args;
+    while(ProjectSubscriptions.length > 0){
+      Subscriber.unsubscribe(ProjectSubscriptions.pop());
+    }
+    ProjectSubscriptions.push(
+      new Subscription(`projectEdited_${project.getID()}`, _on_projectEdited),
+      new Subscription(`projectHidden_${project.getID()}`, _on_projectHidden),
+      new Subscription(`projectShown_${project.getID()}`, _on_projectShown)
+    )
+    Subscriber.subscribe(...ProjectSubscriptions);
+    _update(toDo, project);
+  }
+  function _on_toDoDeleted(args){
+    _destroy();
+  }
+  function _on_toDoDisabled(args){
+    _disable();
+  }
   function _hide(){
     _self.classList.add(_classes.animations.contractAndFadeOut);
   }
   function _show(){
     _self.classList.add(_classes.animations.expandAndFadeIn);
   }
-  function _destroy(isFromToDoDeleteClick){
-    Subscriber.unsubscribeAll();
+  function _disable(){
+    Subscriber.unsubscribe(ToDoSubscriptions[1], ToDoSubscriptions[2], ...ProjectSubscriptions)
     _self.removeEventListener('animationend', _handleAnimationEnd);
     _toDoViewControl_edit.removeEventListener('click', _handleClick_EditButton);
     _toDoViewControl_delete.removeEventListener('click', _handleClick_DeleteButton);
+  }
+  function _destroy(){
+    Subscriber.unsubscribeAll();
     if(_self.classList.contains(_classes.mixins.showing.split(' ')[0])){
       _self.classList.add(_classes.animations.contractAndFadeOut);
       _self.addEventListener('animationend', function(event){
         const {animationName} = event;
         if(animationName === 'contractAndFadeOut'){
-          if(isFromToDoDeleteClick){
-            Publisher.publish('deleteToDo', {toDoID: _toDoID, projectID: _projectID});
-          }
           root.removeChild(_self);
         }
       }, {once: true})
     } else {
-      if(isFromToDoDeleteClick){
-        Publisher.publish('deleteToDo', {toDoID: _toDoID, projectID: _projectID});
-      }
       root.removeChild(_self);
     }
-    
   }
   function _update(updateToDo, updateProject){
     [toDo, project] = [updateToDo, updateProject];
