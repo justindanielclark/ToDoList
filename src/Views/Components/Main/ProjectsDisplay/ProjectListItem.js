@@ -16,10 +16,8 @@ const ProjectListItem = (root, controller, project) => {
   const Publisher = controller.publisherWrapper({});
   const Subscription = controller.Subscription;
   Subscriber.subscribe(
-    new Subscription(`toDoCreated_${_id}`, _updatePrioNotices),
-    new Subscription(`toDoDeleted_${_id}`, _updatePrioNotices),
-    new Subscription(`projectEdited_${_id}`, _onProjectEdit),
-    new Subscription(`projectEdited_updatePrioNotices_${_id}`, _updatePrioNotices)
+    new Subscription(`projectEdited_${_id}`, _on_ProjectEdit),
+    new Subscription(`projectEdited_updatePrioNotices_${_id}`, _on_PrioNoticesUpdated)
   )
   //*CSS Tailwind Style Declarations
   const _classes = {
@@ -242,7 +240,7 @@ const ProjectListItem = (root, controller, project) => {
       controller.publish(`hideProject`, {projectID: _id}); // Listeners: index(state)
     }
   }
-  function _onProjectEdit(args){
+  function _on_ProjectEdit(args){
     project = args.project;
     _update(project);
   }
@@ -262,9 +260,9 @@ const ProjectListItem = (root, controller, project) => {
     _projectIMG.src = projectIconPath;
     _projectIMG.alt = `${projectName} icon`;
     _title.innerText = projectName;
-    _updatePrioNotices({project});
+    _on_PrioNoticesUpdated({project});
   }
-  function _updatePrioNotices(args){
+  function _on_PrioNoticesUpdated(args){
     const {project} = args;
     const projectNumPrios = project.getNumPrios();
     if(projectNumPrios.high > 0){

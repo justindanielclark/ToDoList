@@ -99,10 +99,9 @@ const App = (()=>{
     //Subscribers: <Main>ToDoDisplay.js
     Controller.publish('toDoCreated', {project, toDo});
     //Subscribers: ProjectListItem.js
-    Controller.publish(`toDoCreated_${projectID}`, {toDo, project}); 
-    return toDo;
+    Controller.publish(`projectEdited_updatePrioNotices_${projectID}`, {project})
   }
-  function deleteProject(args){ //WORKING ON FIXING THIS
+  function deleteProject(args){
     const {id} = args;
     const project = State.deleteProject(id);
     const projects = State.getProjects();
