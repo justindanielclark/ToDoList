@@ -4,7 +4,7 @@ const Main = (root, controller) => {
   //*CSS Tailwind Declarations
   const _classes = {
     base: {
-      self: 'bg-slate-800 flex flex-col lg:flex-row grow shrink-0 overflow-hidden items-stretch'
+      self: 'bg-slate-800 flex flex-row grow shrink-0 overflow-hidden items-stretch relative'
     }
   }
   //*DOM Element Creation

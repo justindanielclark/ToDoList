@@ -13,8 +13,11 @@ const Header = (root, controller) => {
   //CSS Tailwind Classes
   const _classes = {
     base: {
-      self: 'bg-stone-700 p-3 sticky top-0 flex flex-row justify-end items-center gap-4 px-4 overflow-hidden grow-0 shrink-0 basis-auto',
+      self: 'bg-stone-700 p-3 sticky top-0 flex flex-row justify-between items-center px-4 overflow-hidden grow-0 shrink-0 basis-auto',
+      buttonControls: 'flex flex-row grow basis-full shrink gap-4 items-center justify-end',
       button: 'bg-emerald-600 hover:bg-emerald-800 transition-colors text-neutral-100 text-lg px-2 py-1 rounded-lg shadow-md shadow-emerald-900',
+      hamburger: 'space-y-1.5 bg-stone-700 hover:bg-stone-600 active:b-stone-500 rounded-lg p-2 visible md:hidden grow-0 shrink-0',
+      hamburgerLine: 'w-6 h-0.5 bg-stone-100',
     },
     animations: {
       appearFromBelow: 'animate-appearFromBelow',
@@ -26,17 +29,30 @@ const Header = (root, controller) => {
   //DOM Element Creation
   const _self = document.createElement('header');
     _self.className = _classes.base.self;
-  const _newProjectButton = document.createElement('button');
-    _newProjectButton.className = [_classes.base.button, _classes.animations.appearFromBelow].join(' ');
-    _newProjectButton.id = 'newProjectButton';
-    _newProjectButton.innerText = 'New Project';
-    _newProjectButton.addEventListener('animationend', _handleAnimationEnd_NewProjectButton);
-  const _newToDoButton = document.createElement('button');
-    _newToDoButton.className = _classes.base.button;
-    _newToDoButton.id = 'newToDoButton';
-    _newToDoButton.innerText = 'New To Do';
-    _newToDoButton.addEventListener('animationend', _handleAnimationEnd_NewToDoButton)
-  _self.append(_newProjectButton)
+  const _hamburger = document.createElement('button');
+    _hamburger.className = _classes.base.hamburger;
+    _hamburger.addEventListener('click', _handleClick_Hamburger);
+    const _hamburger_topLine = document.createElement('div');
+    _hamburger_topLine.className = _classes.base.hamburgerLine;
+    const _hamburger_middleLine = document.createElement('div');
+    _hamburger_middleLine.className = _classes.base.hamburgerLine;
+    const _hamburger_bottomLine = document.createElement('div');
+    _hamburger_bottomLine.className = _classes.base.hamburgerLine;
+  _hamburger.append(_hamburger_topLine,_hamburger_middleLine,_hamburger_bottomLine);
+  const _buttonControls = document.createElement('div');
+  _buttonControls.className = _classes.base.buttonControls;
+    const _newProjectButton = document.createElement('button');
+      _newProjectButton.className = [_classes.base.button, _classes.animations.appearFromBelow].join(' ');
+      _newProjectButton.id = 'newProjectButton';
+      _newProjectButton.innerText = 'New Project';
+      _newProjectButton.addEventListener('animationend', _handleAnimationEnd_NewProjectButton);
+    const _newToDoButton = document.createElement('button');
+      _newToDoButton.className = _classes.base.button;
+      _newToDoButton.id = 'newToDoButton';
+      _newToDoButton.innerText = 'New To Do';
+      _newToDoButton.addEventListener('animationend', _handleAnimationEnd_NewToDoButton)
+  _buttonControls.append(_newProjectButton);
+  _self.append(_hamburger, _buttonControls)
   root.append(_self);
 
   //*Closure Functions
@@ -49,7 +65,7 @@ const Header = (root, controller) => {
     if(animationName === 'disappearBelow'){
       this.classList.remove(_classes.animations.disappearBelow);
       this.removeEventListener('click', _handleClick_NewToDo);
-      _self.removeChild(this);
+      _buttonControls.removeChild(this);
     }
   }
   function _handleAnimationEnd_NewProjectButton(event){
@@ -65,12 +81,15 @@ const Header = (root, controller) => {
   function _handleClick_NewToDo(event){
     newToDoModal(root, controller);
   }
+  function _handleClick_Hamburger(event){
+    controller.publish('projectListToggled', {});
+  }
   function _update(args){
     const {projects} = args;
     if(projects.size > 0 && !isShowing_newToDoButton){
       isShowing_newToDoButton = true;
       _newToDoButton.classList.add(_classes.animations.appearFromBelow);
-      _self.prepend(_newToDoButton);
+      _buttonControls.prepend(_newToDoButton);
     }
     if(projects.size === 0 && isShowing_newToDoButton){
       isShowing_newToDoButton = false;

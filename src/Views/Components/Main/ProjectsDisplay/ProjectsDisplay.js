@@ -4,17 +4,22 @@ const ProjectsDisplay = (root, controller) => {
   const Subscriber = controller.subscriberWrapper({});
   const Subscription = controller.Subscription;
   Subscriber.subscribe(
-    new Subscription('projectCreated', _onProjectCreate)
+    new Subscription('projectCreated', _on_projectCreate),
+    new Subscription('projectListToggled', _on_projectsListToggle),
   )
   //*CSS Tailwind Declarations
   const _classes = {
     base: {
-      self: 'bg-slate-700 text-slate-100 flex flex-col lg:w-72 overflow-y-auto',
-      title: 'text-2xl p-4 text-neutral-100',
-      topContainer: 'flex flex-row',
+      self: 'top-0 left-0 bg-slate-700 text-slate-100 flex flex-col w-full md:w-72 overflow-y-auto absolute md:relative h-full md:h-auto z-30 transition duration-700 md:transition-none md:translate-y-0',
+      title: 'text-2xl text-neutral-100',
+      topContainer: 'flex flex-col p-4',
       projectsList: 'pl-2 pr-4 flex flex-col',
-      noCurrentProjectsNotice: 'px-2 text-center'
+      noCurrentProjectsNotice: 'px-2 text-center',
     },
+    mixins: {
+      expanded: 'translate-y-0',
+      contracted: '-translate-y-full'
+    }
   }
   //*Utility Closure Variables
   const _listItems = [];
@@ -24,7 +29,7 @@ const ProjectsDisplay = (root, controller) => {
 
   //*DOM Creation
   const _self = document.createElement('aside');
-    _self.className = _classes.base.self;
+    _self.className = [_classes.base.self, _classes.mixins.contracted].join(' ');
   const _topContainer = document.createElement('div');
     _topContainer.className = _classes.base.topContainer;
     const _title = document.createElement('h1');
@@ -39,7 +44,8 @@ const ProjectsDisplay = (root, controller) => {
   _projectList.append(_noCurrentProjectsNotice);
   _self.append(_topContainer, _projectList);
   root.append(_self);
-  function _onProjectCreate(args){
+
+  function _on_projectCreate(args){
     const {project, projects} = args;
     if(_projectList.contains(_noCurrentProjectsNotice)){
       _projectList.removeChild(_noCurrentProjectsNotice);
@@ -57,6 +63,10 @@ const ProjectsDisplay = (root, controller) => {
         }
       }, _intervalTimer);
     }
+  }
+  function _on_projectsListToggle(event){
+    _self.classList.toggle(_classes.mixins.contracted);
+    _self.classList.toggle(_classes.mixins.expanded);
   }
 }
 
