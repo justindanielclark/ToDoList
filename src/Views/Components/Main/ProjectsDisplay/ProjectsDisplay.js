@@ -10,7 +10,7 @@ const ProjectsDisplay = (root, controller) => {
   //*CSS Tailwind Declarations
   const _classes = {
     base: {
-      self: 'top-0 left-0 bg-slate-700 text-slate-100 flex flex-col w-full md:w-72 overflow-y-auto absolute md:relative h-full md:h-auto z-30 transition duration-700 md:transition-none md:translate-y-0',
+      self: 'top-0 left-0 bg-slate-700 text-slate-100 flex flex-col w-full lg:w-80 overflow-y-auto absolute lg:relative h-full lg:h-auto z-30 transition duration-700 lg:transition-none lg:translate-y-0',
       title: 'text-2xl text-neutral-100',
       topContainer: 'flex flex-col p-4',
       projectsList: 'pl-2 pr-4 flex flex-col',

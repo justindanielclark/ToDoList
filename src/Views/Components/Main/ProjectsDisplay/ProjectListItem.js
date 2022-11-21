@@ -34,7 +34,7 @@ const ProjectListItem = (root, controller, project) => {
       notice: 'w-5 h-5 flex flex-row justify-center items-center text-neutral-100 rounded-full z-10',
       noticeContainer: 'flex flex-row absolute top-0 left-0 -translate-x-1 -translate-y-3',
       self: 'flex flex-col items-center mb-4',
-      title: 'pl-4 md:grow text-left',
+      title: 'pl-4 lg:grow text-left',
       orderContainer: 'flex flex-col justify-between',
       orderContainerFlexFill: 'grow-1 shrink-1 basis-1',
       orderButton: 'basis-6 max-h-6 w-6 hover:bg-slate-600 rounded-lg grow-0 shrink-0',

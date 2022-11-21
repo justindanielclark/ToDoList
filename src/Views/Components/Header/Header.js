@@ -16,7 +16,7 @@ const Header = (root, controller) => {
       self: 'bg-stone-700 p-3 sticky top-0 flex flex-row justify-between items-center px-4 overflow-hidden grow-0 shrink-0 basis-auto',
       buttonControls: 'flex flex-row grow basis-full shrink gap-4 items-center justify-end',
       button: 'bg-emerald-600 hover:bg-emerald-800 transition-colors text-neutral-100 text-lg px-2 py-1 rounded-lg shadow-md shadow-emerald-900',
-      hamburger: 'space-y-1.5 bg-stone-700 hover:bg-stone-600 active:b-stone-500 rounded-lg p-2 visible md:hidden grow-0 shrink-0',
+      hamburger: 'space-y-1.5 bg-stone-700 hover:bg-stone-600 active:b-stone-500 rounded-lg p-2 visible lg:hidden grow-0 shrink-0',
       hamburgerLine: 'w-6 h-0.5 bg-stone-100',
     },
     animations: {

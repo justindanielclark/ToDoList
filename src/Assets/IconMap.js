@@ -45,6 +45,7 @@ import target from './SVGs/Icons/target.svg'
 import visa from './SVGs/Icons/visa.svg'
 import wallet from './SVGs/Icons/wallet.svg'
 import world from './SVGs/Icons/world.svg'
+
 const IconMap = {
   backpack,
   bag,

@@ -293,7 +293,7 @@ const App = (()=>{
     let Groceries = createProject({projectName: 'Groceries', iconName: 'cart', color: 'red'})
     createToDo({
       projectID: Groceries.getID(),
-      toDoName: 'Chana Masala Ingredients',
+      toDoName: 'Make Chana Masala',
       dueDate: '2022-12-01',
       priority: 'high',
       notes: ['Jalapeno', 'Garam Masala', 'Coriander', 'Red Pepper']
@@ -332,6 +332,52 @@ const App = (()=>{
       priority: 'high',
       notes: ['Seabird Cafe']
     })
+    let Thanksgiving = createProject({projectName: 'Thanksgiving', iconName: 'chicken', color: 'amber'})
+    createToDo({
+      projectID: Thanksgiving.getID(),
+      toDoName: 'Cook Turkey',
+      dueDate: '2022-11-24',
+      priority: 'high',
+      notes: ['6 lbs.']
+    })
+    createToDo({
+      projectID: Thanksgiving.getID(),
+      toDoName: 'Make Cranberry Sauce',
+      dueDate: '2022-11-24',
+      priority: 'high',
+      notes: ['Low Sugar']
+    })
+    let ChristmasShopping = createProject({projectName: 'Christmas Shopping', iconName: 'forest', color: 'cyan'})
+    createToDo({
+      projectID: ChristmasShopping.getID(),
+      toDoName: 'Gifts for Natasha',
+      dueDate: '2022-12-25',
+      priority: 'med',
+      notes: ['$100k', 'A 5 story home', '25 diamond rings']
+    })
+    createToDo({
+      projectID: ChristmasShopping.getID(),
+      toDoName: 'Gifts for Mom',
+      dueDate: '2022-12-25',
+      priority: 'med',
+      notes: ['Cutting Board', 'Muffin Tins']
+    })
+    createToDo({
+      projectID: ChristmasShopping.getID(),
+      toDoName: 'Gifts for Dad',
+      dueDate: '2022-12-25',
+      priority: 'med',
+      notes: ['Drill Bits', 'Hammer']
+    })
+    let SuperBowlParty = createProject({projectName: 'Super Bowl Party', iconName: 'pizza', color: 'stone'});
+    createToDo({
+      projectID: SuperBowlParty.getID(),
+      toDoName: 'Order Pizza',
+      dueDate: '2023-2-14',
+      priority: 'low',
+      notes: ['Pepperoni']
+    })
+
   }
   return {
     State,

@@ -6,7 +6,7 @@ const ToDoView = (root, controller, toDo, project) => {
   //*Tailwind CSS Setup
   const _classes = {
     base: {
-      self: 'flex flex-col w-64 overflow-hidden mr-4',
+      self: 'flex flex-col overflow-hidden w-72',
       topContainer: 'flex flex-row items-baseline relative h-5 flex-initial',
       bottomContainer: 'ml-6 relative rounded-md flex-auto',
       prioNotice: 'w-3 h-3 rounded-full -translate-y-full z-20',
@@ -173,6 +173,7 @@ const ToDoView = (root, controller, toDo, project) => {
       },
       showing: 'max-h-64 mb-4 pt-4',
       hiding: 'max-h-0 mb-0 pt-0',
+      hidden: 'hidden',
     },
     animations: {
       expandAndFadeIn: 'animate-expandAndFadeIn',
@@ -272,6 +273,7 @@ const ToDoView = (root, controller, toDo, project) => {
       _self.classList.add(..._classes.mixins.hiding.split(' '));
       _self.classList.remove(..._classes.mixins.showing.split(' '));
       _self.classList.remove(_classes.animations.contractAndFadeOut);
+      _self.classList.add(_classes.mixins.hidden);
     }
   }
   function _handleClick_EditButton(event){
@@ -314,6 +316,7 @@ const ToDoView = (root, controller, toDo, project) => {
     _self.classList.add(_classes.animations.contractAndFadeOut);
   }
   function _show(){
+    _self.classList.remove(_classes.mixins.hidden);
     _self.classList.add(_classes.animations.expandAndFadeIn);
   }
   function _disable(){

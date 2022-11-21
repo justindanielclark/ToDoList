@@ -3,10 +3,8 @@ const ToDosDisplay = (root, controller) => {
   //*Tailwind CSS
   const _classes = {
     base: {
-      self: 'bg-slate-800 grow shrink-0 basis-1 flex flex-col gap-4',
-      viewControls: 'flex flex-row p-2',
-      viewControl: 'hover:bg-slate-600 bg-slate-50 text-slate-700 hover:text-slate-50 w-8 h-8 rounded-full p-1 flex items-center justify-center text-2xl font-bold transition-colors duration-300 cursor-pointer',
-      toDoList: 'flex flex-col flex-wrap px-6 mt-6 grow shrink-0 basis-1 h-0 content-start overflow-x-auto'
+      self: 'bg-slate-800 grow shrink-0 basis-1 flex flex-col p-4',
+      toDoList: 'flex flex-row flex-wrap grow shrink-0 basis-1 h-0 content-start overflow-y-auto justify-around'
     }
   }
   //*Utility Variables
