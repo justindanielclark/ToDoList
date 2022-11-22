@@ -8,11 +8,6 @@ import Footer from './Views/Components/Footer/Footer';
 import SubscriberPublisherController from './Utilities/SubscriberPublisherController.js';
 
 const App = (()=>{
-  const LocalStorage = window.localStorage;
-  Object.keys(LocalStorage).forEach(function(key){
-    console.log(localStorage.getItem(key));
- });
-
   const Controller = SubscriberPublisherController();
   const Subscription = Controller.Subscription;
   const Subscriber = Controller.subscriberWrapper({});
@@ -76,6 +71,38 @@ const App = (()=>{
     Footer(root);
   })()
 
+  const LocalStorage = window.localStorage;
+  loadLocalStorage();
+
+  //*LocalStorage Functions
+  function loadLocalStorage(){
+    const projectsToLoad = [];
+    const toDosToLoad = new Map();
+    Object.keys(LocalStorage).forEach(function(key){
+      const retrievedItem = JSON.parse(localStorage.getItem(key));
+      if(retrievedItem.type === 'ToDo'){
+        const {projectID} = retrievedItem;
+        if(toDosToLoad.get(projectID)){
+          toDosToLoad.get(projectID).push(retrievedItem)
+        } else {
+          toDosToLoad.set(projectID, [retrievedItem])
+        }
+      }
+      else if(retrievedItem.type === 'Project'){
+        projectsToLoad.push(retrievedItem);
+      }
+    });
+    LocalStorage.clear();
+    projectsToLoad.sort(function(a,b){return a.order-b.order});
+    projectsToLoad.forEach(project=>{
+      const p = createProject({projectName: project.projectName, iconName: project.iconName, color: project.color})
+      toDosToLoad.get(project.projectID).forEach(toDo=>{
+        createToDo({projectID: p.getID(), toDoName: toDo.title, dueDate: toDo.dueDate, priority: toDo.priority, notes: toDo.notes})
+      })
+    })
+    console.log(toDosToLoad);
+    console.log(projectsToLoad);
+  }
   //*Subscriber Functions
   Subscriber.subscribe(
     new Subscription('createToDo', createToDo),
@@ -118,9 +145,11 @@ const App = (()=>{
     const toDosToDelete = [];
     //Subscribers: Header.js, ProjectDisplay.js
     Controller.publish('projectDeleted', {project, projects})
+    LocalStorage.removeItem(id);
     for(let toDo of toDos.values()){
       if(toDo.getProjectID() === id){
         toDos.delete(toDo.getID());
+        LocalStorage.removeItem(toDo.getID());
         toDosToDelete.push(toDo);
         //Subscriber: toDoView.js
         Controller.publish(`toDoDisabled_${toDo.getID()}`);
@@ -144,6 +173,7 @@ const App = (()=>{
     Controller.publish(`toDoDeleted_${toDoID}`, {})
     //Subscribers: ProjectListItem.js
     Controller.publish(`projectEdited_updatePrioNotices_${projectID}`, {project})
+    LocalStorage.removeItem(toDoID);
   }
   function editProject(args){
     const {projectID, projectName, iconName, color} = args;
@@ -153,6 +183,7 @@ const App = (()=>{
     project.setColor(color);
     //Subscribers: ProjectListItem.js, ToDoView.js
     Controller.publish(`projectEdited_${projectID}`, {project});
+    LocalStorage.setItem(projectID, project.stringify());
   }
   function editToDo(args){
     const {projectID, toDo, toDoName, dueDate, priority, notes} = args;
@@ -183,6 +214,7 @@ const App = (()=>{
       toDo.setPriority(priority);
       toDo.setNotes(notes);
     }
+    LocalStorage.setItem(toDo.getID(), toDo.stringify());
   }
   function getProject(args){
     const {subscription, id} = args;

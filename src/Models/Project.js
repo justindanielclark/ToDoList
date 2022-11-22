@@ -80,6 +80,7 @@ class Project {
   stringify(){
     return JSON.stringify({
       type: 'Project',
+      projectID: this.#id,
       projectName: this.#projectName,
       iconName: this.#iconName,
       color: this.#color,
