@@ -8,6 +8,11 @@ import Footer from './Views/Components/Footer/Footer';
 import SubscriberPublisherController from './Utilities/SubscriberPublisherController.js';
 
 const App = (()=>{
+  const LocalStorage = window.localStorage;
+  Object.keys(LocalStorage).forEach(function(key){
+    console.log(localStorage.getItem(key));
+ });
+
   const Controller = SubscriberPublisherController();
   const Subscription = Controller.Subscription;
   const Subscriber = Controller.subscriberWrapper({});
@@ -90,7 +95,8 @@ const App = (()=>{
     const projects = State.getProjects();
     const project = State.createProject(projectName, iconName, color, projects.size);
     //Subscribers: Header.js, ProjectsDisplay.js
-    Controller.publish('projectCreated', {project, projects}); 
+    Controller.publish('projectCreated', {project, projects});
+    LocalStorage.setItem(project.getID(), project.stringify());
     return project;
   }
   function createToDo(args){
@@ -101,6 +107,8 @@ const App = (()=>{
     Controller.publish('toDoCreated', {project, toDo});
     //Subscribers: ProjectListItem.js
     Controller.publish(`projectEdited_updatePrioNotices_${projectID}`, {project})
+    LocalStorage.setItem(toDo.getID(), toDo.stringify());
+    return toDo;
   }
   function deleteProject(args){
     const {id} = args;
@@ -209,181 +217,180 @@ const App = (()=>{
     Controller.publish(`projectShown_${projectID}`, null)
   }
   //Initializing Some Data
-  {
-    let Backpacking = createProject({projectName: 'Backpacking', iconName: 'backpack', color: 'green'})
-    createToDo({
-      projectID: Backpacking.getID(),
-      toDoName: 'Buy Pack',
-      dueDate: '2022-11-25',
-      priority: 'high',
-      notes: ['REI Sale on 11-25-22', 'Santa Ana']
-    })
-    createToDo({
-      projectID: Backpacking.getID(),
-      toDoName: 'Buy Foodstuffs',
-      dueDate: '2022-11-17',
-      priority: 'high',
-      notes: ['REI Sale on 11-25-22', 'Santa Ana']
-    })
-    createToDo({
-      projectID: Backpacking.getID(),
-      toDoName: 'Train',
-      dueDate: '2022-4-17',
-      priority: 'med',
-      notes: ['Go for a run at Saddleback Park', 'Min 2 Miles']
-    })
-    createToDo({
-      projectID: Backpacking.getID(),
-      toDoName: 'Train',
-      dueDate: '2022-9-17',
-      priority: 'med',
-      notes: ['Go for a hike at Ridgepeak', 'Min 6 Miles','Go for a hike at Ridgepeak',]
-    })
-    createToDo({
-      projectID: Backpacking.getID(),
-      toDoName: 'Train',
-      dueDate: '2022-1-5',
-      priority: 'med',
-      notes: ['Hike Mt. Wilson', 'Min 10 Miles']
-    })
-
-    let Business = createProject({projectName: 'Business', iconName: 'bag', color: 'blue'})
-    createToDo({
-      projectID: Business.getID(),
-      toDoName: 'Buy Tickets to Denver',
-      dueDate: '2023-1-7',
-      priority: 'high',
-      notes: ['American Airlines', 'Arrival by 9AM', 'Flight 11/28']
-    })
-    createToDo({
-      projectID: Business.getID(),
-      toDoName: 'Call Sheryl in AR',
-      dueDate: '2022-11-18',
-      priority: 'low',
-      notes: ['Johnson Account']
-    })
-    let Housekeeping = createProject({projectName: 'Housekeeping', iconName: 'bulb', color: 'orange'})
-    createToDo({
-      projectID: Housekeeping.getID(),
-      toDoName: 'Mop',
-      dueDate: '2022-12-01',
-      priority: 'med',
-      notes: ['Kitchen']
-    })
-    createToDo({
-      projectID: Housekeeping.getID(),
-      toDoName: 'Mop',
-      dueDate: '2022-12-01',
-      priority: 'med',
-      notes: ['Living Room']
-    })
-    createToDo({
-      projectID: Housekeeping.getID(),
-      toDoName: 'Mop',
-      dueDate: '2022-12-01',
-      priority: 'med',
-      notes: ['Bathroom']
-    })
-    createToDo({
-      projectID: Housekeeping.getID(),
-      toDoName: 'Do Dishes',
-      dueDate: '2022-12-01',
-      priority: 'high',
-    })
-    let Groceries = createProject({projectName: 'Groceries', iconName: 'cart', color: 'red'})
-    createToDo({
-      projectID: Groceries.getID(),
-      toDoName: 'Make Chana Masala',
-      dueDate: '2022-12-01',
-      priority: 'high',
-      notes: ['Jalapeno', 'Garam Masala', 'Coriander', 'Red Pepper']
-    })
-    createToDo({
-      projectID: Groceries.getID(),
-      toDoName: 'Japanese Curry',
-      dueDate: '2022-11-25',
-      priority: 'low',
-      notes: ['Med Spicy', 'x2']
-    })
-    let Valentines = createProject({projectName: 'Valentines Day', iconName: 'heart', color: 'pink'})
-    createToDo({
-      projectID: Valentines.getID(),
-      toDoName: 'Buy Flowers',
-      dueDate: '2023-2-14',
-      priority: 'low',
-      notes: ['Peonies']
-    })
-    createToDo({
-      projectID: Valentines.getID(),
-      toDoName: 'Buy Chocolates',
-      dueDate: '2023-2-14',
-      priority: 'low',
-    })
-    createToDo({
-      projectID: Valentines.getID(),
-      toDoName: 'Get Suit Dry Cleaned',
-      dueDate: '2023-2-14',
-      priority: 'low',
-    })
-    createToDo({
-      projectID: Valentines.getID(),
-      toDoName: 'Get Reservations',
-      dueDate: '2023-2-14',
-      priority: 'high',
-      notes: ['Seabird Cafe']
-    })
-    let Thanksgiving = createProject({projectName: 'Thanksgiving', iconName: 'chicken', color: 'amber'})
-    createToDo({
-      projectID: Thanksgiving.getID(),
-      toDoName: 'Cook Turkey',
-      dueDate: '2022-11-24',
-      priority: 'high',
-      notes: ['6 lbs.']
-    })
-    createToDo({
-      projectID: Thanksgiving.getID(),
-      toDoName: 'Make Cranberry Sauce',
-      dueDate: '2022-11-24',
-      priority: 'high',
-      notes: ['Low Sugar']
-    })
-    let ChristmasShopping = createProject({projectName: 'Christmas Shopping', iconName: 'forest', color: 'cyan'})
-    createToDo({
-      projectID: ChristmasShopping.getID(),
-      toDoName: 'Gifts for Natasha',
-      dueDate: '2022-12-25',
-      priority: 'med',
-      notes: ['$100k', 'A 5 story home', '25 diamond rings']
-    })
-    createToDo({
-      projectID: ChristmasShopping.getID(),
-      toDoName: 'Gifts for Mom',
-      dueDate: '2022-12-25',
-      priority: 'med',
-      notes: ['Cutting Board', 'Muffin Tins']
-    })
-    createToDo({
-      projectID: ChristmasShopping.getID(),
-      toDoName: 'Gifts for Dad',
-      dueDate: '2022-12-25',
-      priority: 'med',
-      notes: ['Drill Bits', 'Hammer']
-    })
-    let SuperBowlParty = createProject({projectName: 'Super Bowl Party', iconName: 'pizza', color: 'stone'});
-    createToDo({
-      projectID: SuperBowlParty.getID(),
-      toDoName: 'Order Pizza',
-      dueDate: '2023-2-14',
-      priority: 'low',
-      notes: ['Pepperoni']
-    })
-
-  }
+  // {
+  //   let Backpacking = createProject({projectName: 'Backpacking', iconName: 'backpack', color: 'green'})
+  //   createToDo({
+  //     projectID: Backpacking.getID(),
+  //     toDoName: 'Buy Pack',
+  //     dueDate: '2022-11-25',
+  //     priority: 'high',
+  //     notes: ['REI Sale on 11-25-22', 'Santa Ana']
+  //   })
+  //   createToDo({
+  //     projectID: Backpacking.getID(),
+  //     toDoName: 'Buy Foodstuffs',
+  //     dueDate: '2022-11-17',
+  //     priority: 'high',
+  //     notes: ['REI Sale on 11-25-22', 'Santa Ana']
+  //   })
+  //   createToDo({
+  //     projectID: Backpacking.getID(),
+  //     toDoName: 'Train',
+  //     dueDate: '2022-4-17',
+  //     priority: 'med',
+  //     notes: ['Go for a run at Saddleback Park', 'Min 2 Miles']
+  //   })
+  //   createToDo({
+  //     projectID: Backpacking.getID(),
+  //     toDoName: 'Train',
+  //     dueDate: '2022-9-17',
+  //     priority: 'med',
+  //     notes: ['Go for a hike at Ridgepeak', 'Min 6 Miles','Go for a hike at Ridgepeak',]
+  //   })
+  //   createToDo({
+  //     projectID: Backpacking.getID(),
+  //     toDoName: 'Train',
+  //     dueDate: '2022-1-5',
+  //     priority: 'med',
+  //     notes: ['Hike Mt. Wilson', 'Min 10 Miles']
+  //   })
+  //   let Business = createProject({projectName: 'Business', iconName: 'bag', color: 'blue'})
+  //   createToDo({
+  //     projectID: Business.getID(),
+  //     toDoName: 'Buy Tickets to Denver',
+  //     dueDate: '2023-1-7',
+  //     priority: 'high',
+  //     notes: ['American Airlines', 'Arrival by 9AM', 'Flight 11/28']
+  //   })
+  //   createToDo({
+  //     projectID: Business.getID(),
+  //     toDoName: 'Call Sheryl in AR',
+  //     dueDate: '2022-11-18',
+  //     priority: 'low',
+  //     notes: ['Johnson Account']
+  //   })
+  //   let Housekeeping = createProject({projectName: 'Housekeeping', iconName: 'bulb', color: 'orange'})
+  //   createToDo({
+  //     projectID: Housekeeping.getID(),
+  //     toDoName: 'Mop',
+  //     dueDate: '2022-12-01',
+  //     priority: 'med',
+  //     notes: ['Kitchen']
+  //   })
+  //   createToDo({
+  //     projectID: Housekeeping.getID(),
+  //     toDoName: 'Mop',
+  //     dueDate: '2022-12-01',
+  //     priority: 'med',
+  //     notes: ['Living Room']
+  //   })
+  //   createToDo({
+  //     projectID: Housekeeping.getID(),
+  //     toDoName: 'Mop',
+  //     dueDate: '2022-12-01',
+  //     priority: 'med',
+  //     notes: ['Bathroom']
+  //   })
+  //   createToDo({
+  //     projectID: Housekeeping.getID(),
+  //     toDoName: 'Do Dishes',
+  //     dueDate: '2022-12-01',
+  //     priority: 'high',
+  //   })
+  //   let Groceries = createProject({projectName: 'Groceries', iconName: 'cart', color: 'red'})
+  //   createToDo({
+  //     projectID: Groceries.getID(),
+  //     toDoName: 'Make Chana Masala',
+  //     dueDate: '2022-12-01',
+  //     priority: 'high',
+  //     notes: ['Jalapeno', 'Garam Masala', 'Coriander', 'Red Pepper']
+  //   })
+  //   createToDo({
+  //     projectID: Groceries.getID(),
+  //     toDoName: 'Japanese Curry',
+  //     dueDate: '2022-11-25',
+  //     priority: 'low',
+  //     notes: ['Med Spicy', 'x2']
+  //   })
+  //   let Valentines = createProject({projectName: 'Valentines Day', iconName: 'heart', color: 'pink'})
+  //   createToDo({
+  //     projectID: Valentines.getID(),
+  //     toDoName: 'Buy Flowers',
+  //     dueDate: '2023-2-14',
+  //     priority: 'low',
+  //     notes: ['Peonies']
+  //   })
+  //   createToDo({
+  //     projectID: Valentines.getID(),
+  //     toDoName: 'Buy Chocolates',
+  //     dueDate: '2023-2-14',
+  //     priority: 'low',
+  //   })
+  //   createToDo({
+  //     projectID: Valentines.getID(),
+  //     toDoName: 'Get Suit Dry Cleaned',
+  //     dueDate: '2023-2-14',
+  //     priority: 'low',
+  //   })
+  //   createToDo({
+  //     projectID: Valentines.getID(),
+  //     toDoName: 'Get Reservations',
+  //     dueDate: '2023-2-14',
+  //     priority: 'high',
+  //     notes: ['Seabird Cafe']
+  //   })
+  //   let Thanksgiving = createProject({projectName: 'Thanksgiving', iconName: 'chicken', color: 'amber'})
+  //   createToDo({
+  //     projectID: Thanksgiving.getID(),
+  //     toDoName: 'Cook Turkey',
+  //     dueDate: '2022-11-24',
+  //     priority: 'high',
+  //     notes: ['6 lbs.']
+  //   })
+  //   createToDo({
+  //     projectID: Thanksgiving.getID(),
+  //     toDoName: 'Make Cranberry Sauce',
+  //     dueDate: '2022-11-24',
+  //     priority: 'high',
+  //     notes: ['Low Sugar']
+  //   })
+  //   let ChristmasShopping = createProject({projectName: 'Christmas Shopping', iconName: 'forest', color: 'cyan'})
+  //   createToDo({
+  //     projectID: ChristmasShopping.getID(),
+  //     toDoName: 'Gifts for Natasha',
+  //     dueDate: '2022-12-25',
+  //     priority: 'med',
+  //     notes: ['$100k', 'A 5 story home', '25 diamond rings']
+  //   })
+  //   createToDo({
+  //     projectID: ChristmasShopping.getID(),
+  //     toDoName: 'Gifts for Mom',
+  //     dueDate: '2022-12-25',
+  //     priority: 'med',
+  //     notes: ['Cutting Board', 'Muffin Tins']
+  //   })
+  //   createToDo({
+  //     projectID: ChristmasShopping.getID(),
+  //     toDoName: 'Gifts for Dad',
+  //     dueDate: '2022-12-25',
+  //     priority: 'med',
+  //     notes: ['Drill Bits', 'Hammer']
+  //   })
+  //   let SuperBowlParty = createProject({projectName: 'Super Bowl Party', iconName: 'pizza', color: 'stone'});
+  //   createToDo({
+  //     projectID: SuperBowlParty.getID(),
+  //     toDoName: 'Order Pizza',
+  //     dueDate: '2023-2-14',
+  //     priority: 'low',
+  //     notes: ['Pepperoni']
+  //   })
+  // }
   return {
     State,
     View,
     Subscriber,
-    Controller
+    Controller,
+    LocalStorage
   }
 })()
 

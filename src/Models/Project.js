@@ -77,6 +77,17 @@ class Project {
     this.#showing = value;
     return this.#showing;
   }
+  stringify(){
+    return JSON.stringify({
+      type: 'Project',
+      projectName: this.#projectName,
+      iconName: this.#iconName,
+      color: this.#color,
+      numPrios: this.#numPrios,
+      showing: this.#showing,
+      order: this.#order,
+    })
+  }
 }
 
 export default Project;

@@ -62,14 +62,15 @@ class ToDo {
     this.#notes.splice(index, 1);
     return this.#notes;
   }
-  toString(){
-    return `
-    {\n
-      \tid: ${this.#id};\n
-      \ttitle: ${this.#title};\n
-      \tdueDate: ${this.#dueDate};\n
-      \tpriority: ${this.#priority};\n
-    }`
+  stringify(){
+    return JSON.stringify({
+      type: 'ToDo',
+      title: this.#title,
+      dueDate: `${this.#dueDate.getFullYear()}-${this.#dueDate.getMonth()+1}-${this.#dueDate.getDate()+1}`,
+      priority: this.#priority,
+      notes: this.#notes,
+      projectID: this.#projectID,
+    })
   }
 }
 export default ToDo;
