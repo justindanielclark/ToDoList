@@ -1,15 +1,18 @@
-# 🚀 Welcome to your new awesome project!
+# To Do List App
 
-This project has been created using **webpack-cli**, you can now run
+Built Using:
+- Tailwind CSS
+- Webpack
+- w/ NPM Library UUIDv4
 
-```
-npm run build
-```
+To Implement:
+- Database w Users and Authentication
+- Feedback for Bad Data entered into Modals
 
-or
-
-```
-yarn build
-```
-
-to bundle your application
+Known Issues:
+- Know how to fix:
+-- Switching between projects can cause a todo to not properly hide itself
+- Unsure of how to fix:
+-- Long strings break the 'notes' in the modals. Putting text-break css properties and hard width caps does not correct it
+-- Chrome has an unwanted CSS overwrite on autofill selection
+-- Picking a lower down icon in the [New/Edit]ProjectsModal causes the screen to shift upwards
