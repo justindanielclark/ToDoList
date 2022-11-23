@@ -181,12 +181,11 @@ const App = (()=>{
     const interval = setInterval(function(){
       if(toDosToDelete.length > 0){
         const toDo = toDosToDelete.pop();
-        console.log(toDo);
         Controller.publish(`toDoDeleted_${toDo.getID()}`)
       } else {
         clearInterval(interval);
       }
-    }, 150);
+    }, 75);
   }
   function deleteToDo(args){
     const {toDoID, projectID} = args;
@@ -269,7 +268,6 @@ const App = (()=>{
     reorderToDos();
   }
   function reorderToDos(args){
-    console.log('called');
     const toDos = State.getToDos();
     const toDoArray = [];
     for(let td of toDos){

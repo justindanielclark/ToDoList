@@ -275,7 +275,6 @@ const newToDoModal = (root, controller) => {
     const projectID = _projectInputGroupSelect.selectedOptions[0].dataset.project;
     const toDoName = _nameInputGroupTextInput.value;
     const dueDate = _dueDateInputGroupInput.value;
-    console.log(dueDate);
     const priority = _checkedPriority;
     const notes = [];
     Array.from(_notesList.children).forEach(note=>{
