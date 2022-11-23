@@ -373,7 +373,7 @@ const ToDoView = (root, controller, toDo, project) => {
     }
     //Set Title/Due Date Text
     _viewTitle.innerText = _title;
-    _viewDueDate.innerText = `${_dueDate.getMonth()+1}/${_dueDate.getDate()+1}/${_dueDate.getFullYear()}`;
+    _viewDueDate.innerText = `${_dueDate.getUTCMonth()+1}/${_dueDate.getUTCDate()}/${_dueDate.getFullYear()}`;
     //Set Notes
     _notes = toDo.getNotes();
     while(_viewNotes.lastChild){

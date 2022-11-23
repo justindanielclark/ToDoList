@@ -240,8 +240,23 @@ const newToDoModal = (root, controller, toDo, project) => {
   function _setModalColors(oldColor, newColor){
     const oldTextAreaTextClass = `text-${oldColor}-900`;
     const newTextAreaTextClass = `text-${newColor}-900`;
+    const oldNoteLightClass = `bg-${oldColor}-200`;
+    const oldNoteDarkClass = `bg-${oldColor}-300`;
+    const newNoteLightClass = `bg-${newColor}-200`;
+    const newNoteDarkClass = `bg-${newColor}-300`;
+
     _notesTextArea.classList.remove(oldTextAreaTextClass);
     _notesTextArea.classList.add(newTextAreaTextClass);
+    Array.from(_notesList.children).forEach(note=>{
+      if(note.classList.contains(oldNoteLightClass)){
+        note.classList.remove(oldNoteLightClass);
+        note.classList.add(newNoteLightClass);
+      }
+      else {
+        note.classList.remove(oldNoteDarkClass);
+        note.classList.add(newNoteDarkClass);
+      }
+    })
 
     _DarkColoredElements.forEach(element => {
       setElementBackgroundColor(element, oldColor, newColor, 900);
@@ -292,6 +307,11 @@ const newToDoModal = (root, controller, toDo, project) => {
     const text = _notesTextArea.value;
     if(text !== ""){
       const noteListItem = document.createElement('li');
+      if(_notesList.children.length % 2 === 0){
+        noteListItem.className =  [`bg-${_chosenColor}-300`, _classes.base.note].join(' ');
+      } else {
+        noteListItem.className = [`bg-${_chosenColor}-200`, _classes.base.note].join(' ');
+      }
       noteListItem.innerText = _notesTextArea.value;
       _notesTextArea.value = "";
       _notesList.append(noteListItem);

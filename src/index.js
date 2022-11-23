@@ -95,13 +95,35 @@ const App = (()=>{
     LocalStorage.clear();
     projectsToLoad.sort(function(a,b){return a.order-b.order});
     projectsToLoad.forEach(project=>{
-      const p = createProject({projectName: project.projectName, iconName: project.iconName, color: project.color})
-      toDosToLoad.get(project.projectID).forEach(toDo=>{
-        createToDo({projectID: p.getID(), toDoName: toDo.title, dueDate: toDo.dueDate, priority: toDo.priority, notes: toDo.notes})
-      })
+      const p = createProject({projectName: project.projectName, iconName: project.iconName, color: project.color});
+      const toDosArray = toDosToLoad.get(project.projectID);
+      if(toDosArray){
+        toDosArray.sort(sortToDos);
+        toDosArray.forEach(toDo=>{
+          createToDo({projectID: p.getID(), toDoName: toDo.title, dueDate: toDo.dueDate, priority: toDo.priority, notes: toDo.notes});
+        })
+      }
     })
-    console.log(toDosToLoad);
-    console.log(projectsToLoad);
+    function sortToDos(toDo_A, toDo_B){
+      if(toDo_A.priority === toDo_B.priority){
+        const toDo_A_Date = new Date(toDo_A.dueDate);
+        const toDo_B_Date = new Date(toDo_B.dueDate);
+        if(toDo_A_Date < toDo_B_Date){
+          return -1;
+        }
+        else if(toDo_A_Date > toDo_B_Date){
+          return 1
+        }
+        return 0;
+      }
+      else if(toDo_A.priority === 'high' && (toDo_B.priority === 'med' || toDo_B.priority === 'low')){
+        return -1;
+      } 
+      else if(toDo_A.priority === 'med' && toDo_B.priority === 'low'){
+        return -1;
+      }
+      return 1;
+    }
   }
   //*Subscriber Functions
   Subscriber.subscribe(
@@ -239,7 +261,16 @@ const App = (()=>{
     const raisedProject = State.getProject(raisedOrderProjectID);
     const loweredProject = State.getProject(loweredOrderProjectID);
     raisedProject.incrementOrder();
+    LocalStorage.setItem(raisedOrderProjectID, raisedProject.stringify());
     loweredProject.decrementOrder();
+    LocalStorage.setItem(loweredOrderProjectID, loweredProject.stringify());
+  }
+  function reorderToDos(args){
+    const toDoArray = Array.from(Object.values(State.getToDos()));
+    toDoArray.sort(ToDo.compare);
+    toDoArray.forEach(td=>{
+      console.log(td.stringify());
+    })
   }
   function showProject(args){
     const {projectID} = args;
@@ -249,6 +280,7 @@ const App = (()=>{
     Controller.publish(`projectShown_${projectID}`, null)
   }
   //Initializing Some Data
+
   // {
   //   let Backpacking = createProject({projectName: 'Backpacking', iconName: 'backpack', color: 'green'})
   //   createToDo({
@@ -268,21 +300,21 @@ const App = (()=>{
   //   createToDo({
   //     projectID: Backpacking.getID(),
   //     toDoName: 'Train',
-  //     dueDate: '2022-4-17',
+  //     dueDate: '2022-04-17',
   //     priority: 'med',
   //     notes: ['Go for a run at Saddleback Park', 'Min 2 Miles']
   //   })
   //   createToDo({
   //     projectID: Backpacking.getID(),
   //     toDoName: 'Train',
-  //     dueDate: '2022-9-17',
+  //     dueDate: '2022-09-17',
   //     priority: 'med',
   //     notes: ['Go for a hike at Ridgepeak', 'Min 6 Miles','Go for a hike at Ridgepeak',]
   //   })
   //   createToDo({
   //     projectID: Backpacking.getID(),
   //     toDoName: 'Train',
-  //     dueDate: '2022-1-5',
+  //     dueDate: '2022-01-05',
   //     priority: 'med',
   //     notes: ['Hike Mt. Wilson', 'Min 10 Miles']
   //   })
@@ -290,7 +322,7 @@ const App = (()=>{
   //   createToDo({
   //     projectID: Business.getID(),
   //     toDoName: 'Buy Tickets to Denver',
-  //     dueDate: '2023-1-7',
+  //     dueDate: '2023-01-07',
   //     priority: 'high',
   //     notes: ['American Airlines', 'Arrival by 9AM', 'Flight 11/28']
   //   })
@@ -348,26 +380,26 @@ const App = (()=>{
   //   createToDo({
   //     projectID: Valentines.getID(),
   //     toDoName: 'Buy Flowers',
-  //     dueDate: '2023-2-14',
+  //     dueDate: '2023-02-14',
   //     priority: 'low',
   //     notes: ['Peonies']
   //   })
   //   createToDo({
   //     projectID: Valentines.getID(),
   //     toDoName: 'Buy Chocolates',
-  //     dueDate: '2023-2-14',
+  //     dueDate: '2023-02-14',
   //     priority: 'low',
   //   })
   //   createToDo({
   //     projectID: Valentines.getID(),
   //     toDoName: 'Get Suit Dry Cleaned',
-  //     dueDate: '2023-2-14',
+  //     dueDate: '2023-02-14',
   //     priority: 'low',
   //   })
   //   createToDo({
   //     projectID: Valentines.getID(),
   //     toDoName: 'Get Reservations',
-  //     dueDate: '2023-2-14',
+  //     dueDate: '2023-02-14',
   //     priority: 'high',
   //     notes: ['Seabird Cafe']
   //   })
@@ -412,18 +444,13 @@ const App = (()=>{
   //   createToDo({
   //     projectID: SuperBowlParty.getID(),
   //     toDoName: 'Order Pizza',
-  //     dueDate: '2023-2-14',
+  //     dueDate: '2023-02-14',
   //     priority: 'low',
   //     notes: ['Pepperoni']
   //   })
   // }
-  return {
-    State,
-    View,
-    Subscriber,
-    Controller,
-    LocalStorage
-  }
+
+  return reorderToDos();
 })()
 
 window.App = App;

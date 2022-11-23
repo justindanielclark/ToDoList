@@ -16,6 +16,28 @@ class ToDo {
     this.#projectID = projectID;
     this.#id = v4();
   }
+  static compare(toDo_A, toDo_B){
+    const toDo_A_Prio = toDo_A.getPriority();;
+    const toDo_B_Prio = toDo_B.getPriority();
+    if(toDo_A_Prio === toDo_B_Prio){
+      const toDo_A_Date = toDo_A.getDueDate();
+      const toDo_B_Date = toDo_B.getDueDate();
+      if(toDo_A_Date < toDo_B_Date){
+        return -1;
+      }
+      else if(toDo_A_Date > toDo_B_Date){
+        return 1
+      }
+      return 0;
+    }
+    else if(toDo_A_Prio === 'high' && (toDo_B_Prio === 'med' || toDo_B_Prio === 'low')){
+      return -1;
+    } 
+    else if(toDo_A_Prio === 'med' && toDo_B_Prio === 'low'){
+      return -1;
+    }
+    return 1;
+  }
   addNote(note){
     this.#notes.push(note);
     return this.#notes;
@@ -66,7 +88,7 @@ class ToDo {
     return JSON.stringify({
       type: 'ToDo',
       title: this.#title,
-      dueDate: `${this.#dueDate.getFullYear()}-${this.#dueDate.getMonth()+1}-${this.#dueDate.getDate()+1}`,
+      dueDate: `${this.#dueDate.getUTCFullYear()}-${this.#dueDate.getUTCMonth()+1}-${this.#dueDate.getUTCDate()}`,
       priority: this.#priority,
       notes: this.#notes,
       projectID: this.#projectID,
