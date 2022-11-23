@@ -15,4 +15,3 @@ Known Issues:
 - Unsure of how to fix:
 -- Long strings break the 'notes' in the modals. Putting text-break css properties and hard width caps does not correct it
 -- Chrome has an unwanted CSS overwrite on autofill selection
--- Picking a lower down icon in the [New/Edit]ProjectsModal causes the screen to shift upwards

@@ -1,7 +1,7 @@
 const _classes = {
   base: {
-    modal: 'w-screen h-screen absolute flex flex-col items-center justify-center z-40',
-    modalScreen: 'w-full h-full opacity-90 bg-stone-800',
+    modal: 'w-full h-full fixed flex flex-col items-center justify-center z-40 top-0 left-0',
+    modalScreen: 'w-full h-full opacity-90 bg-stone-800 absolute left-0 top-0',
     modalForm: 'flex flex-col rounded-md shadow-md shadow-slate-900 w-72 absolute opacity-100 z-50',
     modalTitle: 'text-base font-bold px-1 py-2 bg-stone-700 text-neutral-100 rounded-t-md border-b-2 border-b-stone-100',
     button: 'text-lg rounded-md px-2 py-1',
