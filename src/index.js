@@ -100,7 +100,7 @@ const App = (()=>{
       if(toDosArray){
         toDosArray.sort(sortToDos);
         toDosArray.forEach(toDo=>{
-          createToDo({projectID: p.getID(), toDoName: toDo.title, dueDate: toDo.dueDate, priority: toDo.priority, notes: toDo.notes});
+          createToDo({projectID: p.getID(), toDoName: toDo.title, dueDate: toDo.dueDate, priority: toDo.priority, notes: toDo.notes, wasProgramatic: true});
         })
       }
     })
@@ -138,6 +138,7 @@ const App = (()=>{
     new Subscription('hideProject', hideProject),
     new Subscription('showProject', showProject),
     new Subscription('reorderProjects', reorderProjects),
+    new Subscription('reorderToDos', reorderToDos),
   )
   function createProject(args){
     const {projectName, iconName, color} = args;
@@ -149,11 +150,11 @@ const App = (()=>{
     return project;
   }
   function createToDo(args){
-    const {projectID, toDoName, dueDate, priority, notes} = args;
+    const {projectID, toDoName, dueDate, priority, notes, wasProgramatic} = args;
     const project = State.getProject(projectID);
     const toDo = State.createToDo(projectID, toDoName, new Date(dueDate), priority, notes);
     //Subscribers: <Main>ToDoDisplay.js
-    Controller.publish('toDoCreated', {project, toDo});
+    Controller.publish('toDoCreated', {project, toDo, wasProgramatic});
     //Subscribers: ProjectListItem.js
     Controller.publish(`projectEdited_updatePrioNotices_${projectID}`, {project})
     LocalStorage.setItem(toDo.getID(), toDo.stringify());
@@ -237,6 +238,7 @@ const App = (()=>{
       toDo.setNotes(notes);
     }
     LocalStorage.setItem(toDo.getID(), toDo.stringify());
+    reorderToDos();
   }
   function getProject(args){
     const {subscription, id} = args;
@@ -264,13 +266,29 @@ const App = (()=>{
     LocalStorage.setItem(raisedOrderProjectID, raisedProject.stringify());
     loweredProject.decrementOrder();
     LocalStorage.setItem(loweredOrderProjectID, loweredProject.stringify());
+    reorderToDos();
   }
   function reorderToDos(args){
-    const toDoArray = Array.from(Object.values(State.getToDos()));
-    toDoArray.sort(ToDo.compare);
+    console.log('called');
+    const toDos = State.getToDos();
+    const toDoArray = [];
+    for(let td of toDos){
+      toDoArray.push(td[1]);
+    }
+    toDoArray.sort(compareToDos);
     toDoArray.forEach(td=>{
-      console.log(td.stringify());
+      Controller.publish(`appendToDoView_${td.getID()}`, {})
     })
+    function compareToDos(toDo_A, toDo_B){
+      const toDo_A_project_order = State.getProject(toDo_A.getProjectID()).getOrder();
+      const toDo_B_project_order = State.getProject(toDo_B.getProjectID()).getOrder();
+      if(toDo_A_project_order < toDo_B_project_order){
+        return -1;
+      } else if(toDo_A_project_order > toDo_B_project_order) {
+        return 1;
+      }
+      return ToDo.compare(toDo_A, toDo_B);
+    }
   }
   function showProject(args){
     const {projectID} = args;
@@ -450,7 +468,9 @@ const App = (()=>{
   //   })
   // }
 
-  return reorderToDos();
+  return {
+    reorderToDos
+  }
 })()
 
 window.App = App;

@@ -3,12 +3,12 @@ const ToDosDisplay = (root, controller) => {
   //*Tailwind CSS
   const _classes = {
     base: {
-      self: 'bg-slate-800 grow shrink-0 basis-1 flex flex-col p-4',
-      toDoList: 'flex flex-row flex-wrap grow shrink-0 basis-1 h-0 content-start overflow-y-auto justify-around'
+      self: 'bg-slate-800 grow shrink-0 basis-1',
+      toDoList: 'p-4 flex flex-row h-full flex-wrap content-start overflow-y-auto justify-around'
     }
   }
   //*Utility Variables
-  const _intervalTimer = 75;
+  const _intervalTimer = 25;
   const _toDisplayQueue = [];
   let _areToDosQueued = false;
 
@@ -32,13 +32,14 @@ const ToDosDisplay = (root, controller) => {
     if(!_areToDosQueued){
       _areToDosQueued = true;
       const interval = setInterval(function(){
+        const {project, toDo, wasProgramatic} = _toDisplayQueue.splice(0,1)[0];
+        ToDoView(_toDoList, controller, toDo, project);
         if(_toDisplayQueue.length === 0){
-          clearInterval(interval);
           _areToDosQueued = false;
-        } else {
-          const {project, toDo} = _toDisplayQueue.splice(0,1)[0];
-          ToDoView(_toDoList, controller, toDo, project);
-        }}, _intervalTimer)
+          if(!wasProgramatic){controller.publish('reorderToDos', {})}
+          clearInterval(interval);
+        }
+      }, _intervalTimer)
     }
   }
 }

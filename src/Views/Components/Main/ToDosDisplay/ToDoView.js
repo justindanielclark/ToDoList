@@ -203,6 +203,7 @@ const ToDoView = (root, controller, toDo, project) => {
     new Subscription(`toDoDeleted_${_toDoID}`, _on_toDoDeleted),
     new Subscription(`toDoEdited_${_toDoID}`, _on_toDoEdit),
     new Subscription(`toDoDisabled_${_toDoID}`, _on_toDoDisabled),
+    new Subscription(`appendToDoView_${_toDoID}`, _on_toDoAppended),
   ];
   Subscriber.subscribe(
     ...ToDoSubscriptions,
@@ -311,6 +312,9 @@ const ToDoView = (root, controller, toDo, project) => {
   }
   function _on_toDoDisabled(args){
     _disable();
+  }
+  function _on_toDoAppended(args){
+    root.append(_self);
   }
   function _hide(){
     _self.classList.add(_classes.animations.contractAndFadeOut);

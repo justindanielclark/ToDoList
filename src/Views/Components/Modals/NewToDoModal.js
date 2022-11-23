@@ -285,7 +285,7 @@ const newToDoModal = (root, controller) => {
       //TODO
       console.log('Not Today Zerg!');
     } else {
-      Publisher.publish('createToDo', {projectID, toDoName, dueDate, priority, notes});
+      Publisher.publish('createToDo', {projectID, toDoName, dueDate, priority, notes, wasProgramatic: false});
       _destroy();
     }
   }
