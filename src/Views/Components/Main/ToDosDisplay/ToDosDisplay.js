@@ -4,7 +4,7 @@ const ToDosDisplay = (root, controller) => {
   const _classes = {
     base: {
       self: 'bg-slate-800 grow shrink-0 basis-1',
-      toDoList: 'p-4 flex flex-row h-full flex-wrap content-start overflow-y-auto justify-around'
+      toDoList: 'p-4 flex flex-row h-full flex-wrap content-start overflow-y-auto justify-around',
     }
   }
   //*Utility Variables

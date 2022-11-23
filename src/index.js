@@ -465,10 +465,6 @@ const App = (()=>{
   //     notes: ['Pepperoni']
   //   })
   // }
-
-  return {
-    reorderToDos
-  }
 })()
 
 window.App = App;
