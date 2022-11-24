@@ -17,7 +17,7 @@ class ToDo {
     this.#id = v4();
   }
   static compare(toDo_A, toDo_B){
-    const toDo_A_Prio = toDo_A.getPriority();;
+    const toDo_A_Prio = toDo_A.getPriority();
     const toDo_B_Prio = toDo_B.getPriority();
     if(toDo_A_Prio === toDo_B_Prio){
       const toDo_A_Date = toDo_A.getDueDate();
@@ -41,7 +41,7 @@ class ToDo {
   addNote(note){
     this.#notes.push(note);
     return this.#notes;
-  };
+  }
   getDueDate(){
     return this.#dueDate;
   }

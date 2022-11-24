@@ -101,7 +101,7 @@ const newToDoModal = (root, controller, toDo, project) => {
     _dueDateInputGroupInput.type = 'date';
     _dueDateInputGroupInput.name = 'toDoDueDate';
     _dueDateInputGroupInput.className = _classes.base.input;
-    _dueDateInputGroupInput.value = toDo.getDueDate().toISOString().split("T")[0];;
+    _dueDateInputGroupInput.value = toDo.getDueDate().toISOString().split("T")[0];
   _dueDateInputGroup.append(_dueDateInputGroupLabel, _dueDateInputGroupInput);
   //Priority Input Group
   const _priorityInputGroup = document.createElement('div');
@@ -116,7 +116,7 @@ const newToDoModal = (root, controller, toDo, project) => {
     _priorityInputGroupRadioContainer.className = _classes.base.prioContainer;
   const _radioButtons = [];
   _priorities.forEach(priority => {
-    const {text, val, color} = priority;
+    const {text, val/*, color*/} = priority;
     const id = `priority_${val}`;
     const priorityLabel = document.createElement('label');
     priorityLabel.htmlFor = id;
@@ -286,7 +286,7 @@ const newToDoModal = (root, controller, toDo, project) => {
       _modalScreen.classList.remove(_classes.animations.fadeIn);
     }
   }
-  function _handleClick_AcceptButton(event){
+  function _handleClick_AcceptButton(){
     const projectID = _projectInputGroupSelect.selectedOptions[0].dataset.project;
     const toDoName = _nameInputGroupTextInput.value;
     const dueDate = _dueDateInputGroupInput.value;
@@ -303,7 +303,7 @@ const newToDoModal = (root, controller, toDo, project) => {
       _destroy();
     }
   }
-  function _handleClick_addNoteButton(event){
+  function _handleClick_addNoteButton(){
     const text = _notesTextArea.value;
     if(text !== ""){
       const noteListItem = document.createElement('li');
@@ -317,15 +317,15 @@ const newToDoModal = (root, controller, toDo, project) => {
       _notesList.append(noteListItem);
     }
   }
-  function _handleClick_CancelButton(event){
+  function _handleClick_CancelButton(){
     _destroy();
   }
-  function _handleClick_removeNoteButton(event){
+  function _handleClick_removeNoteButton(){
     if(_notesList.lastChild){
       _notesList.removeChild(_notesList.lastChild);
     }
   }
-  function _handleClick_PriorityRadio(event){
+  function _handleClick_PriorityRadio(){
     _checkedPriority = this.value;
   }
   function _handleChange_projectSelect(event){

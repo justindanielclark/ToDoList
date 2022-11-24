@@ -10,8 +10,8 @@ const Main = (root, controller) => {
   //*DOM Element Creation
   const _self = document.createElement('main');
     _self.className = _classes.base.self
-  const _projectsDisplay = ProjectsDisplay(_self, controller)
-  const _toDoDisplay = ToDosDisplay(_self, controller);
+  ProjectsDisplay(_self, controller)
+  ToDosDisplay(_self, controller);
 
   root.append(_self);
 }

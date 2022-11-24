@@ -64,12 +64,11 @@ const App = (()=>{
       getToDos,
     }
   })()
-  const View = (()=>{
-    const root = document.body;
-    Header(root, Controller);
-    Main(root, Controller);
-    Footer(root);
-  })()
+  //View
+  const root = document.body;
+  Header(root, Controller);
+  Main(root, Controller);
+  Footer(root);
 
   const LocalStorage = window.localStorage;
   loadLocalStorage();
@@ -267,7 +266,7 @@ const App = (()=>{
     LocalStorage.setItem(loweredOrderProjectID, loweredProject.stringify());
     reorderToDos();
   }
-  function reorderToDos(args){
+  function reorderToDos(){
     const toDos = State.getToDos();
     const toDoArray = [];
     for(let td of toDos){

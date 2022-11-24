@@ -75,13 +75,13 @@ const Header = (root, controller) => {
       this.classList.remove(_classes.animations.appearFromBelow);
     }
   }
-  function _handleClick_NewProject(event){
+  function _handleClick_NewProject(){
     NewProjectModal(root, controller);
   }
-  function _handleClick_NewToDo(event){
+  function _handleClick_NewToDo(){
     newToDoModal(root, controller);
   }
-  function _handleClick_Hamburger(event){
+  function _handleClick_Hamburger(){
     controller.publish('projectListToggled', {});
   }
   function _update(args){

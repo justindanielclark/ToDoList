@@ -46,7 +46,7 @@ const ProjectsDisplay = (root, controller) => {
   root.append(_self);
 
   function _on_projectCreate(args){
-    const {project, projects} = args;
+    const {project/*, projects*/} = args;
     if(_projectList.contains(_noCurrentProjectsNotice)){
       _projectList.removeChild(_noCurrentProjectsNotice);
     }
@@ -64,7 +64,7 @@ const ProjectsDisplay = (root, controller) => {
       }, _intervalTimer);
     }
   }
-  function _on_projectsListToggle(event){
+  function _on_projectsListToggle(){
     _self.classList.toggle(_classes.mixins.contracted);
     _self.classList.toggle(_classes.mixins.expanded);
   }

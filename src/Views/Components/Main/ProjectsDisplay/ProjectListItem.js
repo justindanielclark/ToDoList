@@ -198,7 +198,7 @@ const ProjectListItem = (root, controller, project) => {
       _bottomContainer.classList.add(_classes.mixins.maxHeightZero, _classes.mixins.hidden);
     }
   }
-  function _handleClick_deleteProject(e){
+  function _handleClick_deleteProject(){
     if(_isExpanded_bottomContainer){
       _isExpanded_bottomContainer = false;
       _expandContractButton.innerText = '+';
@@ -218,10 +218,10 @@ const ProjectListItem = (root, controller, project) => {
       _self.classList.add(_classes.animations.slideOutAndContract)
     }
   }
-  function _handleClick_editProject(e){
+  function _handleClick_editProject(){
     EditProjectModal(document.body, controller, project);
   }
-  function _handleClick_expandContractButton(e){
+  function _handleClick_expandContractButton(){
     if(_isContracted_bottomContainer){
       _isContracted_bottomContainer = false;
       _expandContractButton.innerText = '-';
@@ -235,7 +235,7 @@ const ProjectListItem = (root, controller, project) => {
       _bottomContainer.classList.add(_classes.animations.heightContract);
     }
   }
-  function _handleClick_moveProjectUpButton(e){
+  function _handleClick_moveProjectUpButton(){
     const projectOrder = project.getOrder();
     if(projectOrder !== 0){
       const projectIDToRaise = _self.parentElement.children[projectOrder-1].dataset.id;
@@ -243,7 +243,7 @@ const ProjectListItem = (root, controller, project) => {
       Publisher.publish('reorderProjects', {loweredOrderProjectID: _id, raisedOrderProjectID: projectIDToRaise});
     }
   }
-  function _handleClick_moveProjectDownButton(e){
+  function _handleClick_moveProjectDownButton(){
     const projectOrder = project.getOrder();
     let projects;
     let moveProjectDownSubscription = new Subscription(`ProjectListItem_GetProjects_${_id}`, function(returnedProjects){

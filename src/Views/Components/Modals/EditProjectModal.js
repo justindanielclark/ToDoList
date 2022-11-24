@@ -66,7 +66,7 @@ const editProjectModal = (root, controller, project) => {
   PossibleColors.forEach(color=>{
     const _colorButton = document.createElement('button');
     _colorButton.dataset.color = color;
-    _colorButton.className = [_classes.base.colorButton, _classes.mixins.colorButton[color].backgroundColor, _classes.mixins.colorButton[color].borderColor].join(' ');;
+    _colorButton.className = [_classes.base.colorButton, _classes.mixins.colorButton[color].backgroundColor, _classes.mixins.colorButton[color].borderColor].join(' ');
     _colorButton.addEventListener('click', _handleClick_ColorButton)
     _colorInputGroupColorContainer.appendChild(_colorButton);
   })
@@ -207,10 +207,10 @@ const editProjectModal = (root, controller, project) => {
     IconLabel.classList.add(`bg-${_chosenColor}-400`);
     _chosenIcon = IconLabel;
   }
-  function _handleClick_CancelButton(event){
+  function _handleClick_CancelButton(){
     _destroy();
   }
-  function _handleClick_AcceptButton(event){
+  function _handleClick_AcceptButton(){
     const projectName = _nameInputGroupTextInput.value;
     if(!projectName || !_chosenIcon){
       //TODO

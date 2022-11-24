@@ -277,10 +277,10 @@ const ToDoView = (root, controller, toDo, project) => {
       _self.classList.add(_classes.mixins.hidden);
     }
   }
-  function _handleClick_EditButton(event){
+  function _handleClick_EditButton(){
     editToDoModal(document.body, controller, toDo, project);
   }
-  function _handleClick_DeleteButton(event){
+  function _handleClick_DeleteButton(){
     _disable();
     Publisher.publish('deleteToDo', {toDoID: _toDoID, projectID: _projectID})
   }
@@ -288,10 +288,10 @@ const ToDoView = (root, controller, toDo, project) => {
     const {project} = args;
     _update(toDo, project);
   }
-  function _on_projectHidden(args){
+  function _on_projectHidden(){
     _hide();
   }
-  function _on_projectShown(args){
+  function _on_projectShown(){
     _show();
   }
   function _on_toDoEdit(args){
@@ -307,13 +307,13 @@ const ToDoView = (root, controller, toDo, project) => {
     Subscriber.subscribe(...ProjectSubscriptions);
     _update(toDo, project);
   }
-  function _on_toDoDeleted(args){
+  function _on_toDoDeleted(){
     _destroy();
   }
-  function _on_toDoDisabled(args){
+  function _on_toDoDisabled(){
     _disable();
   }
-  function _on_toDoAppended(args){
+  function _on_toDoAppended(){
     root.append(_self);
   }
   function _hide(){
